@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+::-webkit-scrollbar{
+  display: none;
+}
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.scroll-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-horizontal 10s linear infinite;
+}
+
+
+
+.skeleton-loader {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-shape {
+  background-color: rgba(186, 186, 186, 0.874);
+  border-radius: 50%;
+  height: 30px;
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  animation: skeleton-loading .8s ease-in-out infinite;
+}
+
+@keyframes loading-animation {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes up-and-down {
+  to {
+    transform: translate(-50%, -20%);
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+
+
+.paymentInput {
+  padding: 1vmax 2vmax;
+  padding-right: 1vmax;
+  width: 100%;
+  border-radius: 4px;
+  outline: none;
+}
