@@ -8,7 +8,7 @@ export const deleteProduct = createAsyncThunk(
     'products/deleteProduct',
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:4000/api/v1/product/${id}`);
+            const response = await axios.delete(`https://officezens-backend.vercel.app/api/v1/product/${id}`);
             return { message: response.data.message, productId: id }; // Return both message and productId
         } catch (error) {
             return rejectWithValue(error.response.data.message || 'Failed to delete product');
@@ -21,7 +21,7 @@ export const updateProduct = createAsyncThunk(
     async (id, data, { rejectWithValue }) => {
         try {
 
-            const response = await axios.put(`http://localhost:4000/api/v1/product/${id}`, {
+            const response = await axios.put(`https://officezens-backend.vercel.app/api/v1/product/${id}`, {
                 data
             });
 
@@ -38,7 +38,7 @@ export const createProduct = createAsyncThunk(
     async (productData, { rejectWithValue }) => {
         try {
             const response = await axios.post(
-                `http://localhost:4000/api/v1/product/new`,
+                `https://officezens-backend.vercel.app/api/v1/product/new`,
                 productData,
                 {
                     headers: { "Content-Type": "application/json" },
@@ -60,7 +60,7 @@ export const fetchLatestProducts = createAsyncThunk(
     'products/fetchLatestProducts', // Updated action type
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:4000/api/v1/product/latest`);
+            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/latest`);
             return response.data.latestProducts;
         } catch (error) {
             return rejectWithValue(error.response.data.message || 'Failed to fetch latest products');
@@ -73,7 +73,7 @@ export const fetchOldProducts = createAsyncThunk(
     'products/fetchOldProducts', // Updated action type
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:4000/api/v1/product/old`);
+            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/old`);
             return response.data.oldProducts;
         } catch (error) {
             return rejectWithValue(error?.response?.data?.message || 'Failed to fetch latest products');
@@ -85,7 +85,7 @@ export const fetchAllCategories = createAsyncThunk(
     'products/fetchAllCategories',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:4000/api/v1/product/allcategories`);
+            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/allcategories`);
             console.log('main categories hoon', response.data.allCategories);
 
             return response.data.allCategories;
@@ -99,7 +99,7 @@ export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:4000/api/v1/product/all`);
+            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/all`);
             return response.data.products;
         } catch (error) {
             return rejectWithValue(error?.response?.data?.message || 'Failed to fetch all products');
