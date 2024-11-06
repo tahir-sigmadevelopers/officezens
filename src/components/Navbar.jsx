@@ -35,7 +35,7 @@ const Navbar = () => {
 
 
         {/* <button className="px-4 py-2 font-semibold text-white bg-yellow-500 rounded-full">Get Started</button> */}
-        {user && user?.role === "user" && isAuthenticated && (
+        {user && user?.role === "admin" && isAuthenticated && (
           <Link to={"/admin/dashboard"} className="px-4 py-2 font-semibold text-white bg-yellow-400  hover:bg-yellow-500 rounded-full">
             Dashboard
           </Link>
