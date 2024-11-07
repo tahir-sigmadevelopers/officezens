@@ -73,7 +73,7 @@ const Carousel = () => {
             </Swiper>
             {/* WhatsApp Icon */}
             <div className="fixed bottom-4 right-6">
-                <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/+923175991373" target="_blank" rel="noopener noreferrer">
                     <img src="/whatsapp.png" alt="whatsapp"  className=" w-12 hover:scale-110 transition-all" />
                 </a>
             </div>

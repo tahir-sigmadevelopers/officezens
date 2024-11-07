@@ -28,12 +28,12 @@ const ProductsHome = () => {
 
   return (
     <section className="p-10 bg-gray-50">
-      <h2 className="text-3xl font-bold text-gray-800 text-center">Quality Office Furniture to Match Your Vision</h2>
-      <p className="mt-2 text-gray-600 text-center">
-        Transform your workspace with stylish, ergonomic office furniture that boosts productivity and comfort.
-      </p>
-      <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-        {latestLoading ? <Skeleton /> : <>
+      {latestLoading ? <Skeleton /> : <>
+        <h2 className="text-3xl font-bold text-gray-800 text-center">Quality Office Furniture to Match Your Vision</h2>
+        <p className="mt-2 text-gray-600 text-center">
+          Transform your workspace with stylish, ergonomic office furniture that boosts productivity and comfort.
+        </p>
+        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {
             latestProducts && latestProducts?.map(product => (
               <div className="p-4 border rounded-lg shadow" key={product._id}>
@@ -46,12 +46,10 @@ const ProductsHome = () => {
             ))
           }
 
-        </>}
 
-
-
-
-      </div>
+        </div>
+      </>
+      }
     </section>
   );
 };
