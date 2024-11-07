@@ -81,7 +81,7 @@ const App = () => {
   return (
     <>
       <Router >
-        <Navbar />
+        {/* <Navbar /> */}
 
         <Routes>
 

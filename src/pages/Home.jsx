@@ -4,11 +4,14 @@ import ProductsHome from '../components/ProductsHome'
 import LatestTrends from '../components/TrendsHome'
 import FashionTrends from '../components/FashionTrends'
 import SuccessHistory from '../components/SuccessHistory'
+import Carousel, { HomeNavbar } from '../components/HomeBanner'
 
 const Home = () => {
     return (
         <>
-            <HomeSection />
+            {/* <HomeSection /> */}
+            <HomeNavbar />
+            <Carousel />
             <ProductsHome />
             <LatestTrends />
             <FashionTrends />
