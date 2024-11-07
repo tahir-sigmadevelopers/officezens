@@ -10,7 +10,7 @@ const Contact = () => {
                         height="100%"
                         title="map"
                         scrolling="no"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d449330.4103979755!2d73.99492003144977!3d31.480487694239283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39191c9dbf0ddeb1%3A0x13bfcdb10fb490de!2sBadshahi%20Mosque!5e0!3m2!1sen!2s!4v1730722743142!5m2!1sen!2s"
+                        src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3397.855312236504!2d74.25379367561516!3d31.61042417417289!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzHCsDM2JzM3LjUiTiA3NMKwMTUnMjIuOSJF!5e0!3m2!1sen!2s!4v1730976740176!5m2!1sen!2s"
                         style={{ filter: "grayscale(1) contrast(1.2) opacity(0.4)" }}
                     ></iframe>
 
