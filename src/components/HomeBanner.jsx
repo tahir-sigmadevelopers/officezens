@@ -37,7 +37,7 @@ export const HomeNavbar = () => {
                         Dashboard
                     </Link>
                 )}
-                {/* <div className="text-white">📞 0334 1288993</div> */}
+                <div className="text-white">📞 031 75991373</div>
             </div>
         </div>
     );
@@ -74,7 +74,7 @@ const Carousel = () => {
             {/* WhatsApp Icon */}
             <div className="fixed bottom-4 right-6">
                 <a href="https://wa.me/+923175991373" target="_blank" rel="noopener noreferrer">
-                    <img src="/whatsapp.png" alt="whatsapp"  className=" w-12 hover:scale-110 transition-all" />
+                    <img src="/whatsapp.png" alt="whatsapp" className=" w-12 hover:scale-110 transition-all" />
                 </a>
             </div>
         </div>

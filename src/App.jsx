@@ -77,7 +77,7 @@ const App = () => {
   }, [dispatch]);
 
   // Replace with your actual Stripe publishable key
-  const stripePromise = loadStripe(stripeApiKey);
+  const stripePromise = loadStripe("your-stripe-api-key");
 
   return (
     <>

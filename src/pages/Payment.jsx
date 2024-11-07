@@ -83,7 +83,7 @@ const Payment = () => {
                 },
             });
 
-            
+
             console.log(`This is the result : ${result.paymentIntent?.status}`);
             if (result.error) {
                 payBtn.current.disabled = false;
@@ -96,6 +96,8 @@ const Payment = () => {
                         status: result.paymentIntent.status,
                     };
                     toast.success("Order Placed Successfully")
+                    // remove "cartItems" from localStorage 
+                    localStorage.removeItem("cartItems");
                     dispatch(createOrder(order));
 
                     navigate("/success");
