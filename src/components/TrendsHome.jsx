@@ -38,7 +38,7 @@ const LatestTrends = () => {
         {latestLoading ? <Skeleton /> : <>
           {
             oldItems && oldItems?.map(product => (
-              <div className="p-4 border rounded-lg shadow">
+              <div className="p-4 border rounded-lg shadow" key={product?._id}>
                 <Link to={`/product/${product?._id}`}>
                   <img src={product?.images[0].url} alt="Trend" className="w-full rounded-md" />
                 </Link>

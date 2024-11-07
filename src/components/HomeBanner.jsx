@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -45,32 +45,48 @@ export const HomeNavbar = () => {
 
 const Carousel = () => {
     return (
-        <div className="mt-8"> {/* Adjusted margin to account for fixed navbar */}
+        <div className="mt-8">
             <Swiper
-                modules={[Navigation, Pagination]}
+                modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={0}
                 slidesPerView={1}
                 navigation
+                pagination={{ clickable: true }}
+                autoplay={{ delay: 3000, disableOnInteraction: false }}
+                loop={true}
             >
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/home-bg-1.jpg" alt="Chair 1" className="w-full h-screen object-cover" />
+                        <img src="/bg4.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/home-bg-2.jpg" alt="Chair 2" className="w-full h-screen object-cover" />
+                        <img src="/bg5.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/home-bg-3.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/bg1.png" alt="Chair 1" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-50"></div>
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <div className="relative w-full h-full">
+                        <img src="/bg2.png" alt="Chair 2" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-50"></div>
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <div className="relative w-full h-full">
+                        <img src="/bg3.png" alt="Chair 3" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
             </Swiper>
+
             {/* WhatsApp Icon */}
             <div className="fixed bottom-4 right-6">
                 <a href="https://wa.me/+923175991373" target="_blank" rel="noopener noreferrer">
