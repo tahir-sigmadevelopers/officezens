@@ -55,7 +55,7 @@ const CartPage = () => {
     };
 
     return (
-        <div className="p-8 bg-gray-50 min-h-screen">
+        <div className="p-8 bg-gray-50 min-h-screen mt-10">
             {/* Page Title */}
             <h2 className="text-3xl font-semibold mb-2">Your Shopping</h2>
             <p className="text-gray-600 mb-8">Home / My Cart</p>

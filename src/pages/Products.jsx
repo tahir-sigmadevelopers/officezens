@@ -76,7 +76,7 @@ const Products = () => {
 
 
     return (
-        <div className="bg-gray-50 py-10 px-4 md:px-16">
+        <div className="bg-gray-50 py-10 px-4 md:px-16 mt-8">
             {/* Title and Category Tags */}
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-800">Living Room Furniture</h1>

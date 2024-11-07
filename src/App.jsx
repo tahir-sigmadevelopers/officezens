@@ -29,6 +29,7 @@ import ProductList from "./admin/AdminProjects"
 import NewProduct from "./admin/AddProject"
 // import OrderList from "./Admin/OrderList"
 import UpdateProduct from "./admin/UpdateProject"
+import { HomeNavbar } from "./components/HomeBanner"
 
 const App = () => {
 
@@ -81,7 +82,7 @@ const App = () => {
   return (
     <>
       <Router >
-        {/* <Navbar /> */}
+        <HomeNavbar />
 
         <Routes>
 
