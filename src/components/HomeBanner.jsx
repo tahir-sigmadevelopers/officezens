@@ -27,7 +27,7 @@ export const HomeNavbar = () => {
                 <Link to="/contact" className="text-white hover:text-gray-300">Contact Us</Link>
             </div>
             <div className="overflow-hidden py-2 rounded-sm ">
-                <div className="overflow-hidden py-2 rounded-sm ">
+                <div className="overflow-hidden rounded-sm ">
                     <div className="scroll-text text-white font-semibold">
                         <p className="uppercase">Pakistan's largest office furniture brand</p>
                         <p className="uppercase">Within Lahore provide the same day delivery </p>
