@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   display: none;
 }
+
 @keyframes scroll-horizontal {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -73,4 +75,33 @@
   width: 100%;
   border-radius: 4px;
   outline: none;
+}
+
+.overflow-hidden {
+  width: 45vw;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scroll-text {
+  display: inline-flex;
+  animation: scroll-horizontal 12s linear infinite;
+}
+
+.scroll-text p {
+  margin: 0;
+  padding-right: 80px;
+  display: inline-block;
+}
+
+/* Horizontal scrolling animation */
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(10%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
