@@ -56,31 +56,31 @@ const Carousel = () => {
             >
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg4.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/new1.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg5.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/new2.png" alt="Chair 3" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg1.png" alt="Chair 1" className="w-full h-screen object-cover" />
+                        <img src="/new3.jpg" alt="Chair 1" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg2.png" alt="Chair 2" className="w-full h-screen object-cover" />
+                        <img src="/new4.jpg" alt="Chair 2" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg3.png" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/new5.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-50"></div>
                     </div>
                 </SwiperSlide>
