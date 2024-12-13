@@ -32,7 +32,7 @@ const AdminProjects = () => {
         dispatch(fetchProducts())
     }, [deleteError, deleteMessage, dispatch])
     return (
-        <div className='flex'>
+        <div className='flex my-16'>
             <Sidebar />
 
             <section className="body-font flex-grow ">
@@ -45,7 +45,7 @@ const AdminProjects = () => {
 
                     </div>
 
-                    <div className="lg:px-2 w-full overflow-hidden">
+                    <div className="lg:px-2 w-full ">
                         <table className="table-auto w-full text-left whitespace-no-wrap">
                             <thead>
                                 <tr>

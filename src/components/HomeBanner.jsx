@@ -18,15 +18,15 @@ export const HomeNavbar = () => {
     };
 
     return (
-        <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center py-4 px-8 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90">
+        <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center py-2 px-8 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90 mb-8">
 
-            <div className="flex space-x-8">
+            <div className="flex space-x-8 ">
                 <Link to="/" className="text-white hover:text-gray-300">Home</Link>
                 <Link to="/products" className="text-white hover:text-gray-300">Products</Link>
                 <Link to="/about" className="text-white hover:text-gray-300">About</Link>
-                <Link to="/contact" className="text-white hover:text-gray-300">Contact Us</Link>
+                <Link to="/contact" className="text-white hover:text-gray-300 w-24">Contact Us</Link>
             </div>
-            <div className="overflow-hidden py-2 rounded-sm ">
+            <div className="overflow-hidden py-2 rounded-sm ml-2">
                 <div className="overflow-hidden rounded-sm ">
                     <div className="scroll-text text-white font-semibold">
                         <p className="uppercase">Pakistan's largest office furniture brand</p>
@@ -35,19 +35,19 @@ export const HomeNavbar = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6 px-4 ml-4">
                 <Link to="/cart" className="text-white hover:text-gray-300">Cart</Link>
                 {!user && !isAuthenticated ? (
-                    <Link to="/login" className="text-white hover:text-gray-300">Log In</Link>
+                    <Link to="/login" className="text-white hover:text-gray-300 w-28 py-2">Log In</Link>
                 ) : (
-                    <button onClick={logoutHandler} className="text-white hover:text-gray-300">Log Out</button>
+                    <button onClick={logoutHandler} className="text-white hover:text-gray-300 w-28 py-2">Log Out</button>
                 )}
                 {user && user.role === "admin" && isAuthenticated && (
                     <Link to="/admin/dashboard" className="text-white hover:text-gray-300">
                         Dashboard
                     </Link>
                 )}
-                <div className="text-white">📞 0317 5991373</div>
+                <div className="text-white w-32 py-1">📞 0317 5991373</div>
             </div>
         </div>
     );

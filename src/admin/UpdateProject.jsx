@@ -70,7 +70,7 @@ const UpdateProduct = () => {
     }, [product]);
 
     return (
-        <div className='flex'>
+        <div className='flex my-16'>
             <Sidebar />
 
             <div className="flex min-h-full container flex-col justify-center px-6 py-4 lg:px-8">

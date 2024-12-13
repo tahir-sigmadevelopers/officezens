@@ -30,6 +30,8 @@ const Payment = () => {
         amount: Math.round(orderInfo.totalPrice * 100),
     };
 
+
+
     const order = {
         shippingInfo,
         orderItems: cartItems,
@@ -37,6 +39,7 @@ const Payment = () => {
         tax: orderInfo.tax,
         shippingPrice: orderInfo.shippingCharges,
         total: orderInfo.totalPrice,
+        user: user._id
     };
 
     console.log(order);
@@ -84,8 +87,10 @@ const Payment = () => {
             });
 
 
-            console.log(`This is the result : ${result.paymentIntent?.status}`);
+            console.log(`This is the result : ${result?.paymentIntent?.status}`);
             if (result.error) {
+                dispatch(createOrder(order));
+
                 payBtn.current.disabled = false;
 
                 toast.error(result.error.message);

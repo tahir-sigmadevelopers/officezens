@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Assignment, BorderColor, Category, Chat, Home, People } from '@mui/icons-material';
+import { Assignment, BorderColor, Category, Chat, Home, MonetizationOn, People } from '@mui/icons-material';
 
 const Sidebar = () => {
 
@@ -16,12 +16,7 @@ const Sidebar = () => {
   const refreshPage = () => {
     navigate(0);
   }
-  const logoutHandle = async () => {
-    await dispatch(logoutUser())
-    navigate("/")
-    refreshPage()
 
-  }
 
 
 
@@ -54,6 +49,17 @@ const Sidebar = () => {
                   <Assignment className='h-6 w-6' />
 
                   <span>Products</span>
+                </Link>
+              </li>
+              <li className="rounded-sm">
+                <Link
+                  to="/admin/orders"
+                  className="flex items-center p-2 space-x-3 rounded-md"
+                >
+
+                  <MonetizationOn className='h-6 w-6' />
+
+                  <span>Orders</span>
                 </Link>
               </li>
 

@@ -11,9 +11,6 @@ const OrderSummary = () => {
 
     const address = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.pinCode}, ${shippingInfo.country}`;
 
-    console.log('main user: ' + user);
-
-
 
     const subtotal = cartItems.reduce((accumulator, currentItem) => {
         const itemPrice = currentItem.price * currentItem.quantity;
