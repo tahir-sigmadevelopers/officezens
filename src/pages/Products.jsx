@@ -63,8 +63,6 @@ const Products = () => {
     const displayedProducts = searchedData?.products;
 
 
-
-
     useEffect(() => {
         dispatch(fetchAllCategories());
     }, []);
@@ -76,20 +74,20 @@ const Products = () => {
 
 
     return (
-        <div className="bg-gray-50 py-10 px-4 md:px-16 mt-8">
+        <div className="bg-gray-50 py-10 px-4 md:px-16 mt-10">
             {/* Title and Category Tags */}
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-800">Living Room Furniture</h1>
                 <p className="text-gray-500">Home / List of Products</p>
-                <div className="mt-4 flex flex-wrap gap-3">
+                {/* <div className="mt-4 flex flex-wrap gap-3">
                     {['Study Table', 'Computer Table', 'Kids Table', 'Moveable Table', 'Dining table', 'More'].map(tag => (
                         <button key={tag} className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-full">
                             {tag}
                         </button>
                     ))}
-                </div>
+                </div> */}
                 <div className='relative'>
-                    <input className='absolute bottom-16 right-8 p-2 rounded-lg border border-black ' type="text" placeholder='Search Here...' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                    <input className='absolute bottom-4 right-8 p-2 rounded-lg border border-black ' type="text" placeholder='Search Here...' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
                 </div>
             </div>
 
