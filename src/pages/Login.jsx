@@ -23,7 +23,8 @@ const Login = () => {
 
             if (payload && payload.user) {
                 dispatch(userExist(payload.user));
-                localStorage.setItem('user', payload.user)
+                localStorage.setItem("user", JSON.stringify(payload.user));
+
                 navigate("/")
             } else {
                 // User does not exist

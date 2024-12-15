@@ -39,16 +39,6 @@ const PrivateRoute = ({ element }) => {
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
-  const [stripeApiKey, setStripeApiKey] = useState("");
-
-  const getStripeApiKey = async () => {
-    const { data } = await axios.get(`${server}/payment/stripeapikey`);
-    setStripeApiKey(data.stripeApiKey);
-  };
-
-  useEffect(() => {
-    getStripeApiKey();
-  }, [stripeApiKey]);
 
   const dispatch = useDispatch();
 
@@ -74,6 +64,8 @@ const App = () => {
     checkUser();
   }, [dispatch]);
 
+
+
   return (
     <>
       <Router>
@@ -91,14 +83,7 @@ const App = () => {
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/confirmorder" element={<ConfirmOrder />} />
           <Route path="/success" element={<PaymentSuccess />} />
-          <Route path="/payment/process"
-            element={
-              stripeApiKey && (
-                <Elements stripe={loadStripe(stripeApiKey)}>
-                  <Payment />
-                </Elements>
-              )
-            } />
+          <Route path="/payment/process" element={<Payment />} />
 
           {/* Admin Routes wrapped in PrivateRoute */}
           <Route path="/admin/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
