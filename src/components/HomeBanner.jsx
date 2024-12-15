@@ -67,48 +67,48 @@ const Carousel = () => {
             >
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/new1.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
-                        <div className="absolute inset-0 bg-black opacity-50"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <img src="/bg-1.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-10"></div>
+                        {/* <div className="absolute inset-0 flex items-center justify-center">
                             {/* <h2 className="text-white text-4xl font-bold">Welcome to Our Collection</h2> */}
-                            <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div>
+                            {/* <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
+                        </div>  */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/new2.png" alt="Chair 3" className="w-full h-screen object-cover" />
-                        <div className="absolute inset-0 bg-black opacity-50"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <img src="/bg-2.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-10"></div>
+                        {/* <div className="absolute inset-0 flex items-center justify-center">
                             <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div>
+                        </div> */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/new3.jpg" alt="Chair 1" className="w-full h-screen object-cover" />
-                        <div className="absolute inset-0 bg-black opacity-50"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <img src="/bg-3.jpg" alt="Chair 1" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-10"></div>
+                        {/* <div className="absolute inset-0 flex items-center justify-center">
                             <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div>
+                        </div> */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/new4.jpg" alt="Chair 2" className="w-full h-screen object-cover" />
-                        <div className="absolute inset-0 bg-black opacity-50"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <img src="/bg-4.jpg" alt="Chair 2" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-10"></div>
+                        {/* <div className="absolute inset-0 flex items-center justify-center">
                             <h2 className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</h2>
-                        </div>
+                        </div> */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/new5.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
-                        <div className="absolute inset-0 bg-black opacity-50"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <img src="/bg-5.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <div className="absolute inset-0 bg-black opacity-10"></div>
+                        {/* <div className="absolute inset-0 flex items-center justify-center">
                             <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div>
+                        </div> */}
                     </div>
                 </SwiperSlide>
             </Swiper>
