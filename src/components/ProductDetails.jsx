@@ -79,7 +79,7 @@ const ProductDetails = () => {
                                         className="rounded-lg w-[80%]"
                                     />
                                 </div>
-                                <div className="flex space-x-2">
+                                {/* <div className="flex space-x-2">
                                     <img
                                         src="https://www.jiomart.com/images/product/original/rvcdgazzao/tekavo-office-table-computer-desk-pc-laptop-study-writing-table-for-home-office-100-l-x60-product-images-orvcdgazzao-p600060325-1-202304011032.jpg?im=Resize=(420,420)"
                                         alt="Thumbnail 1"
@@ -100,7 +100,7 @@ const ProductDetails = () => {
                                         alt="Thumbnail 4"
                                         className="w-20 h-20 rounded-lg  cursor-pointer"
                                     />
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Right Section - Product Information */}
