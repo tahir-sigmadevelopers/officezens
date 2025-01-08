@@ -18,16 +18,15 @@ export const deleteProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
     'products/updateProduct',
-    async (id, data, { rejectWithValue }) => {
+    async ({ id, data }, { rejectWithValue }) => { // Combine id and data into an object
         try {
+            console.log('product update');
 
-            const response = await axios.put(`https://officezens-backend.vercel.app/api/v1/product/${id}`, {
-                data
-            });
+            const response = await axios.put(`http://localhost:4000/api/v1/product/${id}`, data);
 
             return response.data.message;
         } catch (error) {
-            return rejectWithValue(error.response.data.message || 'Failed to Update Product');
+            return rejectWithValue(error.response?.data?.message || 'Failed to Update Product');
         }
     }
 );

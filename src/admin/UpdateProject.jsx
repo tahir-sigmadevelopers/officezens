@@ -24,18 +24,19 @@ const UpdateProduct = () => {
     const params = useParams();
 
     const imagesUploadChange = (e) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            if (reader.readyState === 2) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
                 setImages(reader.result);
-            }
-        };
-        reader.readAsDataURL(e.target.files[0]);
+            };
+            reader.readAsDataURL(file);
+        }
     };
-
+    
     const updateProjectSubmit = async (e) => {
         e.preventDefault();
-
+    
         const data = new FormData();
         data.set("name", name);
         data.set("description", description);
@@ -43,16 +44,26 @@ const UpdateProduct = () => {
         data.set("price", price);
         data.set("stock", stock);
         data.set("images", images);
+    
+        const resultAction = await dispatch(updateProduct({ id: params.id, data }));
+    
+        if (updateProduct.fulfilled.match(resultAction)) {
+            toast.success("Product updated successfully!");
+            navigate("/admin/products");
+        } else if (updateProduct.rejected.match(resultAction)) {
+            const error = resultAction.payload || "Failed to update product!";
+            toast.error(error);
+            console.log("Error during product update:", error);
+            console.log("Full action details:", resultAction);
+        }
+    };
+    
 
-        await dispatch(updateProduct({ id: params.id, data }));
-        toast.success("Product Updated successfully!");
-
+    useEffect(() => {
         if (updateError) {
             toast.error(updateError);
         }
-
-        navigate("/admin/products");
-    };
+    }, [updateError]);
 
     useEffect(() => {
         dispatch(fetchProductDetails(params.id));
@@ -68,6 +79,7 @@ const UpdateProduct = () => {
             setImages(product.images || "/trash.png");
         }
     }, [product]);
+    
 
     return (
         <div className='flex my-16'>
@@ -131,7 +143,7 @@ const UpdateProduct = () => {
 
                         <div>
                             {
-                                updateLoading ? <Skeleton /> : <button type="submit" className="flex w-full justify-center rounded-md bg-yellow-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 mt-4">Update</button>
+                                updateLoading ? <Skeleton length={1} /> : <button type="submit" className="flex w-full justify-center rounded-md bg-yellow-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 mt-4">Update</button>
                             }
                         </div>
                     </form>

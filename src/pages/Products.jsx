@@ -149,13 +149,13 @@ const Products = () => {
             </>}
 
             {/* Pagination */}
-            <div className="flex justify-center items-center gap-2 mt-8">
+            {/* <div className="flex justify-center items-center gap-2 mt-8">
                 <button className="text-gray-500 hover:text-gray-700">&lt;</button>
                 {[1, 2, 3, 4, 100].map((page) => (
                     <button key={page} className="px-3 py-1 rounded-full bg-yellow-200 hover:bg-yellow-300 text-yellow-700 font-medium">{page}</button>
                 ))}
                 <button className="text-gray-500 hover:text-gray-700">&gt;</button>
-            </div>
+            </div> */}
 
             {/* Similar Items */}
             {/* <div className="mt-12">
