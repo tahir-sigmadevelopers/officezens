@@ -2,13 +2,14 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { server } from '../constants';
 
 
 export const deleteProduct = createAsyncThunk(
     'products/deleteProduct',
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`https://officezens-backend.vercel.app/api/v1/product/${id}`);
+            const response = await axios.delete(`${server}/api/v1/product/${id}`);
             return { message: response.data.message, productId: id }; // Return both message and productId
         } catch (error) {
             return rejectWithValue(error.response.data.message || 'Failed to delete product');
@@ -21,7 +22,7 @@ export const updateProduct = createAsyncThunk(
     async ({ id, data }, { rejectWithValue }) => { // Combine id and data into an object
         try {
 
-            const response = await axios.put(`https://officezens-backend.vercel.app/api/v1/product/${id}`, data);
+            const response = await axios.put(`${server}/api/v1/product/${id}`, data);
 
             return response.data.message;
         } catch (error) {
@@ -36,15 +37,18 @@ export const createProduct = createAsyncThunk(
     async (productData, { rejectWithValue }) => {
         try {
             const response = await axios.post(
-                `https://officezens-backend.vercel.app/api/v1/product/new`,
+                `${server}/api/v1/product/new`,
                 productData,
                 {
                     headers: { "Content-Type": "application/json" },
                 }
             );
+            console.log("main response hoon", response.data);
 
             return response.data.product;
         } catch (error) {
+            console.log('main error: ' + error);
+
             return rejectWithValue(error?.response?.data?.message || 'Failed to create product');
         }
     }
@@ -58,7 +62,7 @@ export const fetchLatestProducts = createAsyncThunk(
     'products/fetchLatestProducts', // Updated action type
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/latest`);
+            const response = await axios.get(`${server}/api/v1/product/latest`);
             return response.data.latestProducts;
         } catch (error) {
             return rejectWithValue(error.response.data.message || 'Failed to fetch latest products');
@@ -71,7 +75,7 @@ export const fetchOldProducts = createAsyncThunk(
     'products/fetchOldProducts', // Updated action type
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/old`);
+            const response = await axios.get(`${server}/api/v1/product/old`);
             return response.data.oldProducts;
         } catch (error) {
             return rejectWithValue(error?.response?.data?.message || 'Failed to fetch latest products');
@@ -83,7 +87,7 @@ export const fetchAllCategories = createAsyncThunk(
     'products/fetchAllCategories',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/allcategories`);
+            const response = await axios.get(`${server}/api/v1/product/allcategories`);
             console.log('main categories hoon', response.data.allCategories);
 
             return response.data.allCategories;
@@ -97,13 +101,34 @@ export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`https://officezens-backend.vercel.app/api/v1/product/all`);
+            const response = await axios.get(`${server}/api/v1/product/all`);
             return response.data.products;
         } catch (error) {
             return rejectWithValue(error?.response?.data?.message || 'Failed to fetch all products');
         }
     }
 );
+
+
+export const addCategory = createAsyncThunk(
+    'products/addCategory',
+    async (categoryData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(
+                `${server}/api/v1/product/new/category`,
+                categoryData,
+                {
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+
+            return response.data.category;
+        } catch (error) {
+            return rejectWithValue(error?.response?.data?.message || 'Failed to create Category');
+        }
+    }
+);
+
 
 const productsSlice = createSlice({
     name: 'products',
@@ -236,6 +261,21 @@ const productsSlice = createSlice({
             .addCase(fetchAllCategories.rejected, (state, action) => {
                 state.allCategoriesLoading = false;
                 state.allCategoriesError = action.payload;
+            })
+
+            // Add Category
+            .addCase(addCategory.pending, (state) => {
+                state.createLoading = true;
+                state.createError = null;
+            })
+            .addCase(addCategory.fulfilled, (state, action) => {
+                state.createLoading = false;
+                state.message = action.payload?.message || 'Category Added successfully';
+                state.category = action.payload.category;
+            })
+            .addCase(addCategory.rejected, (state, action) => {
+                state.createLoading = false;
+                state.createError = action.payload || 'Error adding category';
             })
     },
 });

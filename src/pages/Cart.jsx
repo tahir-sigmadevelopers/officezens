@@ -50,7 +50,8 @@ const CartPage = () => {
 
 
     const removeFromCartHandler = (id) => {
-        dispatch(removeFromCart(id));
+        // dispatch(removeFromCart(id));
+        localStorage.removeItem("cartItems")
         toast.success("Item Removed From Cart");
     };
 
@@ -90,7 +91,12 @@ const CartPage = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-4">
-                                    <img src="/trash.png" alt="Del" className='w-6 hover:bg-gray-200 rounded-lg cursor-pointer' onClick={() => removeFromCartHandler(item.id)} />
+                                    <img
+                                        src="/trash.png"
+                                        alt="Del"
+                                        className='w-6 hover:bg-gray-200 rounded-lg cursor-pointer'
+                                        onClick={removeFromCartHandler}
+                                    />
                                     <div className="flex items-center border rounded-lg">
                                         <button onClick={() => decreaseCart(item.id, item.quantity)} className="px-3 py-1 text-gray-600">-</button>
 

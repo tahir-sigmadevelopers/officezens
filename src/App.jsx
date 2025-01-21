@@ -26,10 +26,12 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Dashboard from './admin/Dashboard';
 import ProductList from "./admin/AdminProjects";
 import NewProduct from "./admin/AddProject";
+import NewCategory from "./admin/AddCategory";
 import UpdateProduct from "./admin/UpdateProject";
 import { HomeNavbar } from "./components/HomeBanner";
 import AdminOrders from "./admin/AdminOrders";
 import OrderDetails from "./admin/AdminOrderDetails";
+import AdminCategory from "./admin/AdminCategory";
 
 // PrivateRoute component
 const PrivateRoute = ({ element }) => {
@@ -88,7 +90,9 @@ const App = () => {
           {/* Admin Routes wrapped in PrivateRoute */}
           <Route path="/admin/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
           <Route path="/admin/products" element={<PrivateRoute element={<ProductList />} />} />
+          <Route path="/admin/categories" element={<PrivateRoute element={<AdminCategory />} />} />
           <Route path="/admin/addproduct" element={<PrivateRoute element={<NewProduct />} />} />
+          <Route path="/admin/addcategory" element={<PrivateRoute element={<NewCategory />} />} />
           <Route path="/admin/orders" element={<PrivateRoute element={<AdminOrders />} />} />
           <Route path="/admin/order/manage/:id" element={<PrivateRoute element={<OrderDetails />} />} />
           <Route path="/admin/product/:id" element={<PrivateRoute element={<UpdateProduct />} />} />

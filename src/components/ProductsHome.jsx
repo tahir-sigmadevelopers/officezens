@@ -40,7 +40,11 @@ const ProductsHome = () => {
                 <Link to={`/product/${product?._id}`} >
                   <img src={product?.images[0].url} alt={product?.name} className="w-full rounded-md" />
                 </Link>
-                <h3 className="mt-2 text-lg font-semibold text-gray-800">{product?.price}</h3>
+                <h3 className="mt-2 text-lg font-semibold mb-2 text-gray-800">{product?.name}</h3>
+
+                <h3 className="mt-2 text-lg font-semibold text-gray-800">${product?.price}</h3>
+                <p className="text-gray-600">{product?.description.slice(0,150)}...</p>
+
                 <button onClick={() => addToCartHandler(product._id, 1)} className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-full">Add to Cart</button>
               </div>
             ))

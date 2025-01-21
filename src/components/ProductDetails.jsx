@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { fetchProductDetails } from '../redux/reducers/product-details';
 import toast from 'react-hot-toast';
 import { Skeleton } from './Loader';
@@ -55,6 +55,7 @@ const ProductDetails = () => {
         toast.success("Item Added to Cart");
     };
 
+    const [mainImage, setMainImage] = useState(product?.images[0]?.url)
 
 
 
@@ -74,33 +75,25 @@ const ProductDetails = () => {
                             <div className="w-full lg:w-1/2 flex flex-col">
                                 <div className="mb-4">
                                     <img
-                                        src={product?.images[0].url}
+                                        src={mainImage}
                                         alt="Main Product"
                                         className="rounded-lg w-[80%]"
                                     />
                                 </div>
-                                {/* <div className="flex space-x-2">
-                                    <img
-                                        src="https://www.jiomart.com/images/product/original/rvcdgazzao/tekavo-office-table-computer-desk-pc-laptop-study-writing-table-for-home-office-100-l-x60-product-images-orvcdgazzao-p600060325-1-202304011032.jpg?im=Resize=(420,420)"
-                                        alt="Thumbnail 1"
-                                        className="w-20 h-20 rounded-lg cursor-pointer"
-                                    />
-                                    <img
-                                        src="https://www.jiomart.com/images/product/original/rvcdgazzao/tekavo-office-table-computer-desk-pc-laptop-study-writing-table-for-home-office-100-l-x60-product-images-orvcdgazzao-p600060325-1-202304011032.jpg?im=Resize=(420,420)"
-                                        alt="Thumbnail 2"
-                                        className="w-20 h-20 rounded-lg cursor-pointer"
-                                    />
-                                    <img
-                                        src="https://www.jiomart.com/images/product/original/rvcdgazzao/tekavo-office-table-computer-desk-pc-laptop-study-writing-table-for-home-office-100-l-x60-product-images-orvcdgazzao-p600060325-1-202304011032.jpg?im=Resize=(420,420)"
-                                        alt="Thumbnail 3"
-                                        className="w-20 h-20 rounded-lg cursor-pointer"
-                                    />
-                                    <img
-                                        src="https://www.jiomart.com/images/product/original/rvcdgazzao/tekavo-office-table-computer-desk-pc-laptop-study-writing-table-for-home-office-100-l-x60-product-images-orvcdgazzao-p600060325-1-202304011032.jpg?im=Resize=(420,420)"
-                                        alt="Thumbnail 4"
-                                        className="w-20 h-20 rounded-lg  cursor-pointer"
-                                    />
-                                </div> */}
+                                <div className="flex space-x-2">
+
+                                    {
+                                        product?.images?.map(img => (
+                                            <img
+                                                onClick={(e) => setMainImage(e.target.src)}
+                                                key={img._id}
+                                                src={img.url}
+                                                alt="Product"
+                                                className="w-12 h-12 rounded-lg cursor-pointer"
+                                            />
+                                        ))
+                                    }
+                                </div>
                             </div>
 
                             {/* Right Section - Product Information */}

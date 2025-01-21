@@ -25,10 +25,21 @@ const Products = () => {
     const [maxPrice, setMaxPrice] = useState(1000000);
     const [page, setPage] = useState(1);
 
+    const categoriesWithSubcategories = {
+        Chair: ["Office Chair", "Gaming Chair", "Dining Chair"],
+        Table: ["Dining Table", "Coffee Table", "Side Table"],
+        Sofa: ["Recliner", "Loveseat", "Sectional Sofa"],
+    };
+
+    const [subCategory, setSubCategory] = React.useState("");
+
+
     const dispatch = useDispatch();
 
     // Access products, loading, and error states from Redux store
     const { items: products, error, allCategories } = useSelector((state) => state.products);
+
+
 
 
 
@@ -65,7 +76,9 @@ const Products = () => {
 
     useEffect(() => {
         dispatch(fetchAllCategories());
+
     }, []);
+    console.log("all categories are here", allCategories);
 
     const addToCartHandler = (id, quantity) => {
         dispatch(addToCart(id, quantity));
@@ -102,44 +115,45 @@ const Products = () => {
                         <div className="mb-4">
                             <h3 className="text-md font-medium text-gray-600 mb-2">Category</h3>
                             <ul className="space-y-2">
-                                <li onClick={() => setCategory("")} className='cursor-pointer text-gray-500 hover:text-gray-700' >All</li>
+                                <li onClick={() => setCategory("")} className='ml-3 cursor-pointer hover:text-gray-900' >All</li>
+                                <select className="block w-full p-2 mb-6">
+                                    <option>Chair</option>
+                                    <option value="SC">Student Chair</option>
+                                    <option value="TT">Teacher Table</option>
+                                </select>
+                                <select className="block w-full p-2 mb-6">
+                                    <option>Sofa</option>
+                                    <option value="HS">Home Sofa</option>
+                                    <option value="OS">Office Sofa</option>
 
-                                {allCategories.map(category => (
-                                    <li
-                                        key={category}
-                                        className="text-gray-500 hover:text-gray-700 cursor-pointer"
-                                        onClick={() => setCategory(category)}
-                                    >{category}</li>
-                                ))}
+                                </select>
+
                             </ul>
                         </div>
                         <div className="mb-4 text-gray-500 hover:text-gray-700 mt-6">
                             <h3 className="text-md font-medium mb-2">Price</h3>
                             <select value={sort} onChange={(e) => setSort(e.target.value)}>
-                                <option className='outline-none'  value="">None</option>
+                                <option className='outline-none' value="">None</option>
                                 <option className='outline-none' value="price-desc">Price: High to Low</option>
                                 <option className='outline-none' value="asc">Price: Low to High</option>
                             </select>
                         </div>
-             
+
                     </div>
 
                     {/* Product Grid */}
                     <div className="w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {displayedProducts?.map((product) => (
-                            <div key={product._id} className="bg-white p-4 rounded-lg shadow-md">
+                        {products?.map((product) => (
+                            <div key={product?._id} className="bg-white p-4 rounded-lg shadow-md">
 
-                                {product.images?.map((image, index) => (
-                                    <img
-                                        key={index}
-                                        src={image.url}
-                                        alt={`${product.name} - ${index + 1}`}
-                                        className="w-full h-40 object-cover rounded-md cursor-pointer"
-                                        onClick={() => navigate(`/product/${product?._id}`)}
-                                    />
-                                ))}
+                                <img
+                                    src={product?.images[0].url}
+                                    alt={`${product.name} `}
+                                    className="w-full h-40 object-cover rounded-md cursor-pointer"
+                                    onClick={() => navigate(`/product/${product?._id}`)}
+                                />
                                 <h3 className="mt-2 font-semibold text-gray-800">{product?.name}</h3>
-                                <p className="text-gray-600">{product?.price}</p>
+                                <p className="text-gray-600">${product?.price}</p>
                                 <button className="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-md" onClick={() => addToCartHandler(product._id, 1)}>Add to Cart</button>
                             </div>
                         ))}

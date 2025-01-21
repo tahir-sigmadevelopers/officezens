@@ -2,14 +2,10 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Assignment, BorderColor, Category, Chat, Home, MonetizationOn, People } from '@mui/icons-material';
+import { Assignment, CategoryRounded, Home, MonetizationOn } from '@mui/icons-material';
 
 const Sidebar = () => {
 
-
-  const dispatch = useDispatch()
-
-  // const { error, message } = useSelector(state => state.user)
 
   const navigate = useNavigate()
 
@@ -49,6 +45,17 @@ const Sidebar = () => {
                   <Assignment className='h-6 w-6' />
 
                   <span>Products</span>
+                </Link>
+              </li>
+              <li className="rounded-sm">
+                <Link
+                  to="/admin/categories"
+                  className="flex items-center p-2 space-x-3 rounded-md"
+                >
+
+                  <CategoryRounded className='h-6 w-6' />
+
+                  <span>Categories</span>
                 </Link>
               </li>
               <li className="rounded-sm">

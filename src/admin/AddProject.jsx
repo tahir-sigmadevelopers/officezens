@@ -3,8 +3,9 @@ import { toast } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
-import { createProduct } from '../redux/reducers/products'
+import { createProduct, fetchAllCategories } from '../redux/reducers/products'
 import { Skeleton } from '../components/Loader'
+import imageCompression from 'browser-image-compression';
 
 const AddProduct = () => {
 
@@ -12,30 +13,41 @@ const AddProduct = () => {
     const [name, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState("")
+    const [subCategory, setSubCategory] = useState("")
     const [price, setprice] = useState(0)
     const [stock, setStock] = useState(0)
-    const [images, setimages] = useState("/trash.png")
+    const [images, setImages] = useState([]);
 
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
 
-    const { createError, message, createLoading } = useSelector(state => state.products)
+    const { createError, message, createLoading, allCategories } = useSelector(state => state.products)
 
 
-    const imagesUploadChange = (e) => {
 
-        if (e.target.name === "images") {
-            const reader = new FileReader()
+
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+
+        setImages([]);
+
+        files.forEach((file) => {
+            const reader = new FileReader();
+
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setimages(reader.result)
+                    setImages((old) => [...old, reader.result]);
                 }
-            }
+            };
 
-            reader.readAsDataURL(e.target.files[0])
-        }
-    }
+            reader.readAsDataURL(file);
+        });
+    };
+
+
+
+
     const addProjectSubmit = async (e) => {
         e.preventDefault()
 
@@ -44,23 +56,39 @@ const AddProduct = () => {
         data.set("name", name)
         data.set("description", description)
         data.set("category", category)
+        data.set("subCategory", subCategory)
         data.set("price", price)
         data.set("stock", stock)
-        data.set("images", images)
+
+        images.forEach((image, index) => {
+            data.append(`images`, image); // Add images as array
+        });
 
 
         await dispatch(createProduct(data));
-        toast.success("Product created successfully!")
+        toast.success(message)
 
         setTitle("")
         setDescription("")
         setCategory("")
         setprice(0)
         setStock(0)
-        setimages("")
+        setImages([])
 
         navigate("/admin/products")
     }
+
+
+    useEffect(() => {
+        dispatch(fetchAllCategories());
+    }, []);
+
+
+
+    // Get the subcategories for the selected category
+    const selectedCategory = allCategories.find(cat => cat?.category === category);
+
+    const subCategories = selectedCategory ? selectedCategory?.subCategory : [];
 
 
 
@@ -85,16 +113,49 @@ const AddProduct = () => {
 
                         <div>
                             <label htmlFor="description" className="block text-sm font-medium leading-6">Description</label>
-                            <div className="mt-1">
-                                <input value={description} name='description' onChange={(e) => setDescription(e.target.value)} type="text" autoComplete="description" required className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inappend ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inappend focus:ring-grey-600 sm:text-sm sm:leading-6 px-2" />
+                            <div className="mt-2">
+                                <textarea name="description" rows="4" class="w-full text-sm text-gray-900 bg-white   focus:ring-0  border p-1 border-black rounded-sm" placeholder="Write Product Description..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+
                             </div>
                         </div>
                         <div>
                             <label htmlFor="category" className="block text-sm font-medium leading-6">Category</label>
-                            <div className="mt-1">
-                                <input value={category} name='category' onChange={(e) => setCategory(e.target.value)} type="text" autoComplete="email" required className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inappend ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inappend focus:ring-grey-600 sm:text-sm sm:leading-6 px-2" />
-                            </div>
+                            <select
+                                value={category}
+                                name="category"
+                                onChange={(e) => setCategory(e.target.value)}
+                                required
+                                className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-gray-300 focus:ring-2 sm:text-sm px-2"
+                            >
+                                <option value="">Select Category</option>
+                                {allCategories?.map((cat) => (
+                                    <option key={cat._id} value={cat.category}>
+                                        {cat.category}
+                                    </option>
+                                ))}
+                            </select>
+
                         </div>
+                        {/* Sub Category   */}
+                        {category && (
+                            <div>
+                                <label htmlFor="subCategory" className="block text-sm font-medium leading-6">Sub Category</label>
+                                <select
+                                    value={subCategory}
+                                    name="subCategory"
+                                    onChange={(e) => setSubCategory(e.target.value)}
+                                    required
+                                    className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-gray-300 focus:ring-2 sm:text-sm px-2"
+                                >
+                                    <option value="">Select Sub Category</option>
+                                    {subCategories?.length > 0 && subCategories?.map((subCat, index) => (
+                                        <option key={index} value={subCat}>
+                                            {subCat}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
 
                         <div>
                             <div className="flex items-center justify-between">
@@ -126,22 +187,29 @@ const AddProduct = () => {
                             <label htmlFor="images" className="block text-sm font-medium leading-6">images</label>
                             <div className="mt-1 pb-1">
 
+
                                 <input
                                     name="images"
                                     accept="images/*"
                                     required
-                                    onChange={imagesUploadChange}
+                                    multiple
+                                    onChange={handleImageUpload}
+
                                     className="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 shadow-lg p-4"
                                     type="file"
 
                                 />
-
+                                <div className="flex h-20 w-10 gap-4 mt-5  overflow-hidden">
+                                    {images.map((image, index) => (
+                                        <img key={index} src={image} alt={`Preview ${index + 1}`} className='w-10 h-10' />
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
                         <div>
                             {
-                                createLoading ? <Skeleton /> : <button type="submit" className="flex w-full justify-center rounded-md bg-yellow-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offappend-2  mt-4">Create</button>
+                                createLoading ? <Skeleton length={1} /> : <button type="submit" className="flex w-full justify-center rounded-md bg-yellow-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offappend-2  mt-4">Create</button>
                             }
                         </div>
                     </form>
