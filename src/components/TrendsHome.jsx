@@ -43,7 +43,7 @@ const LatestTrends = () => {
                   <img src={product?.images[0].url} alt="Trend" className="w-full rounded-md" />
                 </Link>
                 <h3 className="mt-2 text-lg font-semibold mb-2 text-gray-800">{product?.name}</h3>
-                <p className="text-gray-600">{product?.description}</p>
+                <p className="text-gray-600">{product?.description.slice(0,150)}...</p>
               </div>
             ))}
         </>
