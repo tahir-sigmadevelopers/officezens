@@ -116,17 +116,15 @@ const Products = () => {
                             <h3 className="text-md font-medium text-gray-600 mb-2">Category</h3>
                             <ul className="space-y-2">
                                 <li onClick={() => setCategory("")} className='ml-3 cursor-pointer hover:text-gray-900' >All</li>
-                                <select className="block w-full p-2 mb-6">
-                                    <option>Chair</option>
-                                    <option value="SC">Student Chair</option>
-                                    <option value="TT">Teacher Table</option>
-                                </select>
-                                <select className="block w-full p-2 mb-6">
-                                    <option>Sofa</option>
-                                    <option value="HS">Home Sofa</option>
-                                    <option value="OS">Office Sofa</option>
-
-                                </select>
+                                {
+                                    allCategories?.map((category) =>
+                                        <select className="block w-full p-2 mb-6" key={category?._id}>
+                                            <option>{category?.category}</option>
+                                            <option value="SC">{category?.subCategory}</option>
+                                        </select>
+                                    )
+                                }
+                              
 
                             </ul>
                         </div>
@@ -143,7 +141,7 @@ const Products = () => {
 
                     {/* Product Grid */}
                     <div className="w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {products?.map((product) => (
+                        {displayedProducts?.map((product) => (
                             <div key={product?._id} className="bg-white p-4 rounded-lg shadow-md">
 
                                 <img

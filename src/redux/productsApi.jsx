@@ -6,7 +6,7 @@ import { server } from './constants';
 // Define the API slice for products
 export const productsApi = createApi({
   reducerPath: 'productsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: `${server}/product` }), // replace with your actual backend URL
+  baseQuery: fetchBaseQuery({ baseUrl: `${server}/api/v1/product` }), // replace with your actual backend URL
   endpoints: (builder) => ({
     searchProducts: builder.query({
       query: ({ price, category, page, search, sort }) => {
