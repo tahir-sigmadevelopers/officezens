@@ -51,6 +51,8 @@ const ProductDetails = () => {
 
 
     const addToCartHandler = () => {
+        console.log(id, quantity);
+
         dispatch(addToCart(id, quantity));
         toast.success("Item Added to Cart");
     };

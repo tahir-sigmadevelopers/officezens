@@ -17,7 +17,7 @@ export const signup = createAsyncThunk(
   'auth/signup',
   async (userData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${server}/user/register`, userData); // Signup API endpoint
+      const { data } = await axios.post(`${server}/api/v1/user/register`, userData); // Signup API endpoint
       toast.success(data.message)
 
       return data;
@@ -33,7 +33,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${server}/user/login`, credentials); // Login API endpoint
+      const { data } = await axios.post(`${server}/api/v1/user/login`, credentials); // Login API endpoint
       toast.success(data.message)
       console.log('yaar data received', data);
 
@@ -47,7 +47,7 @@ export const login = createAsyncThunk(
 
 export const getUser = async (id) => {
   try {
-    const { data } = await axios.get(`${server}/user/${id}`)
+    const { data } = await axios.get(`${server}/api/v1/user/${id}`)
 
     return data;
 
