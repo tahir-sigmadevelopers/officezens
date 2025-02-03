@@ -16,6 +16,17 @@ export const deleteProduct = createAsyncThunk(
         }
     }
 );
+export const deleteCategory = createAsyncThunk(
+    'products/deleteCategory',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await axios.delete(`${server}/api/v1/product/delete/category/${id}`);
+            return { message: response.data.message, categoryId: id }; // Return both message and categoryId
+        } catch (error) {
+            return rejectWithValue(error.response.data.message || 'Failed to delete Category ' + categoryId);
+        }
+    }
+);
 
 export const updateProduct = createAsyncThunk(
     'products/updateProduct',
@@ -225,6 +236,19 @@ const productsSlice = createSlice({
                 state.message = action.payload.message;
             })
             .addCase(deleteProduct.rejected, (state, action) => {
+                state.deleteLoading = false;
+                state.deleteError = action.payload;
+            })
+            // Delete Category
+            .addCase(deleteCategory.pending, (state) => {
+                state.deleteLoading = true;
+                state.deleteError = null;
+            })
+            .addCase(deleteCategory.fulfilled, (state, action) => {
+                state.deleteLoading = false;
+                state.message = action.payload.message;
+            })
+            .addCase(deleteCategory.rejected, (state, action) => {
                 state.deleteLoading = false;
                 state.deleteError = action.payload;
             })

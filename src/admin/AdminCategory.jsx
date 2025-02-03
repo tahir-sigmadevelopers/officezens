@@ -3,7 +3,7 @@ import Sidebar from './Sidebar'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import { deleteProduct, fetchAllCategories, fetchProducts } from '../redux/reducers/products'
+import { deleteCategory, fetchAllCategories } from '../redux/reducers/products'
 import { Skeleton } from '../components/Loader'
 // import { loadUser } from '../redux/actions/user'
 
@@ -14,7 +14,12 @@ const AdminCategory = () => {
     const { loading, allCategories } = useSelector(state => state.products)
 
 
+    const deleteCategoryHandle = async (categoryId) => {
 
+        await dispatch(deleteCategory(categoryId))
+
+        toast.success('Category Deleted Successfully')
+    }
 
     useEffect(() => {
         dispatch(fetchAllCategories());
@@ -50,9 +55,13 @@ const AdminCategory = () => {
                                             allCategories && allCategories?.map((product) => (
 
                                                 <tr key={product?._id}>
-                                                    <td className="px-4 py-3">{product?.category}</td> 
+                                                    <td className="px-4 py-3">{product?.category}</td>
                                                     <td className="px-4 py-3">{product?.subCategory} </td>
+                                                    <td className="px-2 py-3 text-lg text-gray-900">
+                                                        <button className='bg-red-500 hover:bg-red-600 text-white w-full py-0.5 rounded-md' onClick={() => deleteCategoryHandle(product?._id)} >Delete</button>
+                                                    </td>
                                                 </tr>
+
                                             ))
                                         }
 
