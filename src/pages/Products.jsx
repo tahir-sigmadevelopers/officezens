@@ -89,9 +89,7 @@ const Products = () => {
         setPage(1);
     };
 
-    console.log("Selected SubCategory:", subCategory);
 
-    console.log(displayedProducts);
 
 
     return (

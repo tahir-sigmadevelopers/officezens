@@ -12,7 +12,7 @@ export const productsApi = createApi({
         if (search) base += `&search=${encodeURIComponent(search)}`;
         if (price) base += `&price=${price}`;
         if (category) base += `&category=${encodeURIComponent(category.trim())}`; // Trim category
-        if (subCategory) base += `&subCategory=${encodeURIComponent(subCategory.trim())}`; // Trim subCategory
+        if (subCategory) base += `&subCategory=${subCategory}`; // Trim subCategory
         if (sort) base += `&sort=${sort}`;
         return base;
       },
