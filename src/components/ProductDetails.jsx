@@ -110,6 +110,16 @@ const ProductDetails = () => {
                                 <p className="text-gray-600 mb-4">
                                     {product?.description}
                                 </p>
+                                <div className='my-3'>
+                                    <h3 className="text-lg font-bold">Variations:</h3>
+                                    <ul className="list-disc pl-5">
+                                        {product?.variations?.map((variation, index) => (
+                                            <li key={index} className="text-green-700">
+                                                {variation}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                                 <div className="flex items-center space-x-2 text-gray-800 mb-4">
                                     <span className="text-2xl font-semibold"> Rs.{product?.price}</span>
                                     <span className="text-gray-400 line-through">Rs. {Math.ceil(product?.price * 1.3)}</span>

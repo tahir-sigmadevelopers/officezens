@@ -12,6 +12,7 @@ const AddProduct = () => {
 
     const [name, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [variations, setVariations] = useState([""])
     const [category, setCategory] = useState("")
     const [subCategory, setSubCategory] = useState("")
     const [price, setprice] = useState(0)
@@ -27,25 +28,25 @@ const AddProduct = () => {
 
     const createProductImagesChange = (e) => {
         const files = Array.from(e.target.files);
-    
+
         setImages([]);
-    
+
         files.forEach((file) => {
             const reader = new FileReader();
-    
+
             reader.onload = () => {
                 if (reader.readyState === 2) {
                     setImages((old) => [...old, reader.result]); // Store base64 strings
                 }
             };
-    
+
             reader.readAsDataURL(file); // Convert file to base64
         });
     };
-    
+
     const addProjectSubmit = async (e) => {
         e.preventDefault();
-    
+
         const data = new FormData();
         data.set("name", name);
         data.set("description", description);
@@ -53,14 +54,16 @@ const AddProduct = () => {
         data.set("subCategory", subCategory);
         data.set("price", price);
         data.set("stock", stock);
-    
+        data.set("variations", variations);
+
+
         images.forEach((image) => {
             data.append("images", image); // Append base64 strings
         });
-    
+
         dispatch(createProduct(data));
         if (!createError) {
-            
+
             toast.success(message);
             setTitle("");
             setDescription("");
@@ -68,7 +71,8 @@ const AddProduct = () => {
             setprice(0);
             setStock(0);
             setImages([]);
-            
+            setVariations("");
+
             navigate("/admin/products");
         } else {
             toast.error("Error Creating product");
@@ -79,12 +83,21 @@ const AddProduct = () => {
         dispatch(fetchAllCategories());
     }, []);
 
+    const handleVariationsChange = (index, value) => {
+        const updatedVariations = [...variations];
+        updatedVariations[index] = value; // Ensure each variation is a separate string in the array
+        console.log(updatedVariations);
+        setVariations(updatedVariations);
+    };
 
-
+    const addVariationsField = () => {
+        setVariations([...variations, ""]); // Adds an empty string to the array for a new variation
+    };
     // Get the subcategories for the selected category
     const selectedCategory = allCategories.find(cat => cat?.category === category);
 
     const subCategories = selectedCategory ? selectedCategory?.subCategory : [];
+
 
 
 
@@ -114,6 +127,35 @@ const AddProduct = () => {
 
                             </div>
                         </div>
+                        <div>
+                            <label htmlFor="description" className="block text-sm font-medium leading-6">Add Variations</label>
+                            {variations?.map((subCategory, index) => (
+                                <div key={index} className="mt-5">
+                                    <label
+                                        htmlFor={`subcategory-${index}`}
+                                        className="block text-sm font-medium leading-6"
+                                    >
+                                        Variation {index + 1}
+                                    </label>
+                                    <input
+                                        value={subCategory}
+                                        type="text"
+                                        name={`variation-${index}`}
+                                        onChange={(e) => handleVariationsChange(index, e.target.value)}
+                                        placeholder={`${index + 1} Variation`}
+                                        className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-grey-600 sm:text-sm sm:leading-6 px-2"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={addVariationsField}
+                            className="mt-3 text-sm text-gray-600 underline"
+                        >
+                            Add More Variations
+                        </button>
                         <div>
                             <label htmlFor="category" className="block text-sm font-medium leading-6">Category</label>
                             <select
