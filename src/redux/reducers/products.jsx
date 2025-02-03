@@ -33,7 +33,9 @@ export const updateProduct = createAsyncThunk(
     async ({ id, data }, { rejectWithValue }) => { // Combine id and data into an object
         try {
 
-            const response = await axios.put(`${server}/api/v1/product/${id}`, data);
+            const response = await axios.put(`${server}/api/v1/product/${id}`, data, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
 
             return response.data.message;
         } catch (error) {
@@ -47,11 +49,13 @@ export const createProduct = createAsyncThunk(
     'products/createProduct',
     async (productData, { rejectWithValue }) => {
         try {
+            console.log("product Data", productData);
+
             const response = await axios.post(
                 `${server}/api/v1/product/new`,
                 productData,
                 {
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "multipart/form-data" },
                 }
             );
             console.log("main response hoon", response.data);

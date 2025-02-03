@@ -57,8 +57,11 @@ const ProductDetails = () => {
         toast.success("Item Added to Cart");
     };
 
-    const [mainImage, setMainImage] = useState(product?.images[0]?.url)
+    const [mainImage, setMainImage] = useState(product && product?.images[0]?.url)
 
+    useEffect(() => {
+        product && setMainImage(product?.images[0]?.url)
+    }, [])
 
 
     return (

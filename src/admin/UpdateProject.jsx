@@ -34,11 +34,11 @@ const UpdateProduct = () => {
 
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setImages((old) => [...old, reader.result]);
+                    setImages((old) => [...old, reader.result]); // Store base64 strings
                 }
             };
 
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // Convert file to base64
         });
     };
 
@@ -53,12 +53,16 @@ const UpdateProduct = () => {
         data.set("price", price);
         data.set("stock", stock);
 
-        images.forEach((image, index) => {
-            data.append(`images`, image); // Add images as array
+        images.forEach((image) => {
+            data.append("images", image); // Append base64 strings
         });
+        console.log("kase ho", data);
 
 
-        const resultAction = await dispatch(updateProduct({ id: params.id, data }));
+
+        const resultAction = dispatch(updateProduct({ id: params.id, data }));
+
+        console.log("main hoon result", resultAction);
 
         if (updateProduct.fulfilled.match(resultAction)) {
             toast.success("Product updated successfully!");
@@ -127,7 +131,7 @@ const UpdateProduct = () => {
                         <div>
                             <label htmlFor="description" className="block text-sm font-medium leading-6">Description</label>
                             <div className="mt-2">
-                                <textarea name="description" rows="4" class="w-full text-sm text-gray-900 bg-white   focus:ring-0  border p-1 border-black rounded-sm" placeholder="Write Product Description..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                                <textarea name="description" rows="4" className="w-full text-sm text-gray-900 bg-white   focus:ring-0  border p-1 border-black rounded-sm" placeholder="Write Product Description..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
 
                             </div>
                         </div>

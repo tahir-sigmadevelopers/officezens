@@ -38,7 +38,7 @@ const ProductsHome = () => {
             latestProducts && latestProducts?.map(product => (
               <div className="p-4 border rounded-lg shadow" key={product._id}>
                 <Link to={`/product/${product?._id}`} >
-                  <img src={product?.images[0].url} alt={product?.name} className="w-full rounded-md" />
+                  <img src={product?.images &&  product?.images[0]?.url} alt={product?.name} className="w-full rounded-md" />
                 </Link>
                 <h3 className="mt-2 text-lg font-semibold mb-2 text-gray-800">{product?.name}</h3>
 

@@ -25,59 +25,55 @@ const AddProduct = () => {
     const { createError, message, createLoading, allCategories } = useSelector(state => state.products)
 
 
-
-
-    const handleImageUpload = (e) => {
+    const createProductImagesChange = (e) => {
         const files = Array.from(e.target.files);
-
+    
         setImages([]);
-
+    
         files.forEach((file) => {
             const reader = new FileReader();
-
+    
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setImages((old) => [...old, reader.result]);
+                    setImages((old) => [...old, reader.result]); // Store base64 strings
                 }
             };
-
-            reader.readAsDataURL(file);
+    
+            reader.readAsDataURL(file); // Convert file to base64
         });
     };
-
-
-
-
+    
     const addProjectSubmit = async (e) => {
-        e.preventDefault()
-
-
+        e.preventDefault();
+    
         const data = new FormData();
-        data.set("name", name)
-        data.set("description", description)
-        data.set("category", category)
-        data.set("subCategory", subCategory)
-        data.set("price", price)
-        data.set("stock", stock)
-
-        images.forEach((image, index) => {
-            data.append(`images`, image); // Add images as array
+        data.set("name", name);
+        data.set("description", description);
+        data.set("category", category);
+        data.set("subCategory", subCategory);
+        data.set("price", price);
+        data.set("stock", stock);
+    
+        images.forEach((image) => {
+            data.append("images", image); // Append base64 strings
         });
-
-
-        await dispatch(createProduct(data));
-        toast.success(message)
-
-        setTitle("")
-        setDescription("")
-        setCategory("")
-        setprice(0)
-        setStock(0)
-        setImages([])
-
-        navigate("/admin/products")
-    }
-
+    
+        dispatch(createProduct(data));
+        if (!createError) {
+            
+            toast.success(message);
+            setTitle("");
+            setDescription("");
+            setCategory("");
+            setprice(0);
+            setStock(0);
+            setImages([]);
+            
+            navigate("/admin/products");
+        } else {
+            toast.error("Error Creating product");
+        }
+    };
 
     useEffect(() => {
         dispatch(fetchAllCategories());
@@ -114,7 +110,7 @@ const AddProduct = () => {
                         <div>
                             <label htmlFor="description" className="block text-sm font-medium leading-6">Description</label>
                             <div className="mt-2">
-                                <textarea name="description" rows="4" class="w-full text-sm text-gray-900 bg-white   focus:ring-0  border p-1 border-black rounded-sm" placeholder="Write Product Description..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                                <textarea name="description" rows="4" className="w-full text-sm text-gray-900 bg-white   focus:ring-0  border p-1 border-black rounded-sm" placeholder="Write Product Description..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
 
                             </div>
                         </div>
@@ -190,18 +186,22 @@ const AddProduct = () => {
 
                                 <input
                                     name="images"
-                                    accept="images/*"
+                                    accept="image/*"
                                     required
                                     multiple
-                                    onChange={handleImageUpload}
-
+                                    onChange={createProductImagesChange}
                                     className="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 shadow-lg p-4"
                                     type="file"
 
                                 />
                                 <div className="flex h-20 w-10 gap-4 mt-5  overflow-hidden">
                                     {images.map((image, index) => (
-                                        <img key={index} src={image} alt={`Preview ${index + 1}`} className='w-10 h-10' />
+                                        <img
+                                            key={index}
+                                            src={image} // Preview the file
+                                            alt={`Preview ${index + 1}`}
+                                            className="w-10 h-10"
+                                        />
                                     ))}
                                 </div>
                             </div>

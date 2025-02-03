@@ -115,18 +115,24 @@ const Products = () => {
                         <div className="mb-4">
                             <h3 className="text-md font-medium text-gray-600 mb-2">Category</h3>
                             <ul className="space-y-2">
-                                <li onClick={() => setCategory("")} className='ml-3 cursor-pointer hover:text-gray-900' >All</li>
-                                {
-                                    allCategories?.map((category) =>
-                                        <select className="block w-full p-2 mb-6" key={category?._id}>
-                                            <option>{category?.category}</option>
-                                            <option value="SC">{category?.subCategory}</option>
+                                <li onClick={() => setCategory("")} className="ml-3 cursor-pointer hover:text-gray-900">
+                                    All
+                                </li>
+                                {allCategories?.map((category) => (
+                                    <div key={category?._id}>
+                                        {/* <label className="font-medium">{category?.category}</label> */}
+                                        <select className="block w-full p-2 mb-6">
+                                            <option value="">{category?.category}</option>
+                                            {category?.subCategory?.map((subCategory, index) => (
+                                                <option key={index} value={subCategory}>
+                                                    {subCategory}
+                                                </option>
+                                            ))}
                                         </select>
-                                    )
-                                }
-                              
-
+                                    </div>
+                                ))}
                             </ul>
+
                         </div>
                         <div className="mb-4 text-gray-500 hover:text-gray-700 mt-6">
                             <h3 className="text-md font-medium mb-2">Price</h3>
@@ -145,7 +151,7 @@ const Products = () => {
                             <div key={product?._id} className="bg-white p-4 rounded-lg shadow-md">
 
                                 <img
-                                    src={product?.images[0].url}
+                                    src={product?.images.length > 0 && product?.images[0].url}
                                     alt={`${product.name} `}
                                     className="w-full h-40 object-cover rounded-md cursor-pointer"
                                     onClick={() => navigate(`/product/${product?._id}`)}
