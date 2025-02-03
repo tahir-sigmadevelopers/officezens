@@ -171,7 +171,7 @@ const Products = () => {
                                     onClick={() => navigate(`/product/${product?._id}`)}
                                 />
                                 <h3 className="mt-2 font-semibold text-gray-800">{product?.name}</h3>
-                                <p className="text-gray-600">${product?.price}</p>
+                                <p className="text-gray-600">Rs. {product?.price}</p>
                                 <button className="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-md" onClick={() => addToCartHandler(product._id, 1)}>Add to Cart</button>
                             </div>
                         ))}

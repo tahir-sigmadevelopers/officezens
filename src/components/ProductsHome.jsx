@@ -42,7 +42,7 @@ const ProductsHome = () => {
                 </Link>
                 <h3 className="mt-2 text-lg font-semibold mb-2 text-gray-800">{product?.name}</h3>
 
-                <h3 className="mt-2 text-lg font-semibold text-gray-800">${product?.price}</h3>
+                <h3 className="mt-2 text-lg font-semibold text-gray-800">Rs. {product?.price}</h3>
                 <p className="text-gray-600"> {product?.description?.slice(0, 100)}{product?.description?.length > 100 ? "..." : ""}
                 </p>
 
