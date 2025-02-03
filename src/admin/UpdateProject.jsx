@@ -64,8 +64,8 @@ const UpdateProduct = () => {
 
         console.log("main hoon result", resultAction);
 
+        toast.success("Product updated successfully!");
         if (updateProduct.fulfilled.match(resultAction)) {
-            toast.success("Product updated successfully!");
             navigate("/admin/products");
         } else if (updateProduct.rejected.match(resultAction)) {
             const error = resultAction.payload || "Failed to update product!";
