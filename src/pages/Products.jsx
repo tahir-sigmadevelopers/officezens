@@ -1,4 +1,3 @@
-// App.js or CategoryPage.js
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,12 +8,7 @@ import { Skeleton } from '../components/Loader';
 import { addToCart } from '../redux/actions/cartActions';
 
 
-const similarItems = [
-    { id: 1, name: "Comfortable Soft Chair", price: "$40.00", image: "comfortable-soft-chair.jpg" },
-    { id: 2, name: "New Soft Chair", price: "$20.00", image: "new-soft-chair.jpg" },
-    { id: 3, name: "Modern Soft Chair", price: "$40.00", image: "modern-soft-chair.jpg" },
-    // Add other similar item objects here
-];
+
 
 const Products = () => {
 
@@ -25,19 +19,15 @@ const Products = () => {
     const [maxPrice, setMaxPrice] = useState(1000000);
     const [page, setPage] = useState(1);
 
-    const categoriesWithSubcategories = {
-        Chair: ["Office Chair", "Gaming Chair", "Dining Chair"],
-        Table: ["Dining Table", "Coffee Table", "Side Table"],
-        Sofa: ["Recliner", "Loveseat", "Sectional Sofa"],
-    };
 
-    const [subCategory, setSubCategory] = React.useState("");
+
+    const [subCategory, setSubCategory] = useState("");
 
 
     const dispatch = useDispatch();
 
     // Access products, loading, and error states from Redux store
-    const { items: products, error, allCategories } = useSelector((state) => state.products);
+    const { error, allCategories } = useSelector((state) => state.products);
 
 
 
@@ -47,6 +37,7 @@ const Products = () => {
     const { data: searchedData, isLoading: searchLoading, isError: productIsError } = useSearchProductsQuery({
         search: keyword,
         category,
+        subCategory,
         sort,
         price: maxPrice,
         page
@@ -78,12 +69,29 @@ const Products = () => {
         dispatch(fetchAllCategories());
 
     }, []);
-    console.log("all categories are here", allCategories);
 
     const addToCartHandler = (id, quantity) => {
         dispatch(addToCart(id, quantity));
         toast.success("Item Added to Cart");
     };
+
+
+
+    const handleCategoryChange = (selectedCategory) => {
+        setCategory(selectedCategory);
+        setSubCategory("");
+        setPage(1);
+    };
+
+    const handleSubCategoryChange = (selectedSubCategory) => {
+        setSubCategory(selectedSubCategory);
+        setCategory("");
+        setPage(1);
+    };
+
+    console.log("Selected SubCategory:", subCategory);
+
+    console.log(displayedProducts);
 
 
     return (
@@ -115,20 +123,28 @@ const Products = () => {
                         <div className="mb-4">
                             <h3 className="text-md font-medium text-gray-600 mb-2">Category</h3>
                             <ul className="space-y-2">
-                                <li onClick={() => setCategory("")} className="ml-3 cursor-pointer hover:text-gray-900">
+                                <li onClick={() => handleCategoryChange("")} className="ml-3 cursor-pointer hover:text-gray-900">
                                     All
                                 </li>
                                 {allCategories?.map((category) => (
                                     <div key={category?._id}>
-                                        {/* <label className="font-medium">{category?.category}</label> */}
-                                        <select className="block w-full p-2 mb-6">
-                                            <option value="">{category?.category}</option>
-                                            {category?.subCategory?.map((subCategory, index) => (
-                                                <option key={index} value={subCategory}>
-                                                    {subCategory}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <label className="font-medium cursor-pointer" onClick={() => handleCategoryChange(category?.category)}>
+                                            {category?.category}
+                                        </label>
+                                        {category?.subCategory?.length > 0 && (
+                                            <select
+                                                className="block w-full p-2 mt-2 border border-gray-300 rounded"
+                                                value={subCategory}
+                                                onChange={(e) => handleSubCategoryChange(e.target.value)}
+                                            >
+                                                <option value="">Select Subcategory</option>
+                                                {category?.subCategory?.map((sub, index) => (
+                                                    <option key={index} value={sub}>
+                                                        {sub}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
                                     </div>
                                 ))}
                             </ul>
