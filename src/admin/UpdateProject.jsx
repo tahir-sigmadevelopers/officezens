@@ -34,13 +34,13 @@ const UpdateProduct = () => {
 
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setImages((old) => [...old, reader.result]); // Store base64 strings
+                    setImages((old) => [...old, reader.result]);
                 }
             };
 
-            reader.readAsDataURL(file); // Convert file to base64
+            reader.readAsDataURL(file);
         });
-    };
+    }
 
     const updateProjectSubmit = async (e) => {
         e.preventDefault();

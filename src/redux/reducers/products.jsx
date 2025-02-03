@@ -264,9 +264,9 @@ const productsSlice = createSlice({
             })
             .addCase(updateProduct.fulfilled, (state, action) => {
                 state.updateLoading = false;
-                state.message = action.payload.message; // Assuming the payload has a message
+                // state.message = action.payload.message; // Assuming the payload has a message
                 const index = state.items.findIndex(
-                    (product) => product.id === action.payload.product.id
+                    (product) => product?._id === action.payload.product?._id
                 );
                 if (index !== -1) {
                     state.items[index] = action.payload.product;
