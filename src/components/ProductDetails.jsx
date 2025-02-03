@@ -112,7 +112,7 @@ const ProductDetails = () => {
                                 </p>
                                 <div className="flex items-center space-x-2 text-gray-800 mb-4">
                                     <span className="text-2xl font-semibold"> Rs.{product?.price}</span>
-                                    <span className="text-gray-400 line-through">${Math.ceil(product?.price * 1.3)}</span>
+                                    <span className="text-gray-400 line-through">Rs. {Math.ceil(product?.price * 1.3)}</span>
                                 </div>
 
                                 {/* Rating and Stock */}
