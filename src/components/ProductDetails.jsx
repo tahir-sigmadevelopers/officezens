@@ -56,12 +56,13 @@ const ProductDetails = () => {
         dispatch(addToCart(id, quantity));
         toast.success("Item Added to Cart");
     };
-
-    const [mainImage, setMainImage] = useState(product && product?.images[0]?.url)
+    const [mainImage, setMainImage] = useState("");
 
     useEffect(() => {
-        product && setMainImage(product?.images[0]?.url)
-    }, [])
+        if (product?.images?.length > 0) {
+            setMainImage(product.images[0].url);
+        }
+    }, [product]); // Add product as a dependency
 
 
     return (
