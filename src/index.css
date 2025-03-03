@@ -7,6 +7,26 @@
   display: none;
 }
 
+/* ProductDetails.css */
+.slick-arrow {
+  font-size: 24px; /* Adjust size as needed */
+  color: #000; /* Change this to your desired arrow color */
+  z-index: 1; /* Ensure arrows are above the images */
+}
+
+.slick-prev {
+  left: 10px; /* Adjust position */
+}
+
+.slick-next {
+  right: 10px; /* Adjust position */
+}
+
+.slick-arrow:hover {
+  color: #ff0000; /* Change color on hover */
+}
+
+
 @keyframes scroll-horizontal {
   0% {
     transform: translateX(100%);
