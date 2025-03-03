@@ -88,9 +88,7 @@ const ProductDetails = () => {
                             <h1 className="text-3xl font-semibold text-gray-800 mb-2">
                                 {product?.name}
                             </h1>
-                            <p className="text-gray-600 mb-4">
-                                {parse(product?.description || '')}
-                            </p>
+                            <div className="text-gray-600 mb-4" dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
 
                             <div className='my-3'>
                                 <h3 className="text-lg font-bold">Variations:</h3>
