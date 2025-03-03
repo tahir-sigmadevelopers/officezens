@@ -45,7 +45,7 @@ const ProductDetails = () => {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 500,
+        speed: 700,
         slidesToShow: 1,
         slidesToScroll: 1,
         adaptiveHeight: true,
