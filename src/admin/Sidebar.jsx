@@ -1,92 +1,51 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-
-import { Assignment, CategoryRounded, Home, MonetizationOn } from '@mui/icons-material';
+import React from 'react';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { Home, Category, ShoppingCart, People, AddBox } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-
-
-  const navigate = useNavigate()
-
-  const refreshPage = () => {
-    navigate(0);
-  }
-
-
-
-
   return (
-
-
-    <>
-      <div className="flex flex-col h-screen p-3 shadow w-60">
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <h2 className="text-xl font-bold text-center pl-2 pt-4">Dashboard</h2>
-          </div>
-          <div className="flex-1">
-            <ul className="pt-2 pb-4 space-y-1 text-sm">
-              <li className="rounded-sm">
-                <Link
-                  to="/admin/dashboard"
-                  className="flex items-center p-2 space-x-3 rounded-md"
-                >
-                  <Home className='h-6 w-6' />
-                  <span>Home</span>
-                </Link>
-              </li>
-              <li className="rounded-sm">
-                <Link
-                  to="/admin/products"
-                  className="flex items-center p-2 space-x-3 rounded-md"
-                >
-
-                  <Assignment className='h-6 w-6' />
-
-                  <span>Products</span>
-                </Link>
-              </li>
-              <li className="rounded-sm">
-                <Link
-                  to="/admin/categories"
-                  className="flex items-center p-2 space-x-3 rounded-md"
-                >
-
-                  <CategoryRounded className='h-6 w-6' />
-
-                  <span>Categories</span>
-                </Link>
-              </li>
-              <li className="rounded-sm">
-                <Link
-                  to="/admin/orders"
-                  className="flex items-center p-2 space-x-3 rounded-md"
-                >
-
-                  <MonetizationOn className='h-6 w-6' />
-
-                  <span>Orders</span>
-                </Link>
-              </li>
-
-
-
-
-
-
-
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </>
-
-
-
-
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: 240,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: { width: 240, boxSizing: 'border-box' },
+      }}
+    >
+      <Toolbar>
+        <Typography variant="h6" noWrap>
+          Admin Panel
+        </Typography>
+      </Toolbar>
+      <List>
+        <ListItem button component={Link} to="/">
+          <ListItemIcon><Home /></ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+        <ListItem button component={Link} to="/admin/dashboard">
+          <ListItemIcon><Home /></ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+        <ListItem button component={Link} to="/admin/products">
+          <ListItemIcon><Category /></ListItemIcon>
+          <ListItemText primary="Products" />
+        </ListItem>
+        {/* <ListItem button component={Link} to="/admin/orders">
+          <ListItemIcon><ShoppingCart /></ListItemIcon>
+          <ListItemText primary="Orders" />
+        </ListItem> */}
+        <ListItem button component={Link} to="/admin/categories">
+          <ListItemIcon><AddBox /></ListItemIcon>
+          <ListItemText primary="Categories" />
+        </ListItem>
+        {/* <ListItem button component={Link} to="/admin/users">
+          <ListItemIcon><People /></ListItemIcon>
+          <ListItemText primary="Users" />
+        </ListItem> */}
+      </List>
+    </Drawer>
   );
-}
+};
 
-export default Sidebar
+export default Sidebar;
