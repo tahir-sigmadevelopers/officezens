@@ -68,41 +68,76 @@ const UpdateProduct = () => {
     const updateProjectSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate variations
-        const validVariations = variations.filter(v => 
-            typeof v === 'string' ? v.trim() !== "" : v.name.trim() !== ""
-        );
-        
-        if (validVariations.length === 0) {
-            toast.error("Please add at least one variation");
-            return;
-        }
+        try {
+            // Validate and clean variations
+            const validVariations = variations.filter(v => {
+                // Handle different variation formats
+                if (typeof v === 'string') {
+                    return v.trim() !== "";
+                } else if (v.name) {
+                    // Check if name is a stringified JSON
+                    if (v.name.startsWith('{') && v.name.includes('"name":"')) {
+                        try {
+                            const parsed = JSON.parse(v.name);
+                            return parsed.name && parsed.name.trim() !== "";
+                        } catch (e) {
+                            return v.name.trim() !== "";
+                        }
+                    }
+                    return v.name.trim() !== "";
+                }
+                return false;
+            }).map(v => {
+                // Normalize variation format
+                if (typeof v === 'string') {
+                    return { name: v, color: "", image: null };
+                } else if (v.name && v.name.startsWith('{') && v.name.includes('"name":"')) {
+                    try {
+                        const parsed = JSON.parse(v.name);
+                        return {
+                            name: parsed.name || "",
+                            color: parsed.color || v.color || "",
+                            image: v.image || null
+                        };
+                    } catch (e) {
+                        return v;
+                    }
+                }
+                return v;
+            });
+            
+            if (validVariations.length === 0) {
+                toast.error("Please add at least one variation");
+                return;
+            }
 
-        const data = new FormData();
-        data.set("name", name);
-        data.set("description", description);
-        data.set("category", category);
-        data.set("subCategory", subCategory);
-        data.set("price", price);
-        data.set("stock", stock);
-        
-        // Convert variations to JSON string to preserve structure
-        data.set("variations", JSON.stringify(validVariations));
+            const data = new FormData();
+            data.set("name", name);
+            data.set("description", description);
+            data.set("category", category);
+            data.set("subCategory", subCategory);
+            data.set("price", price);
+            data.set("stock", stock);
+            
+            // Convert variations to JSON string to preserve structure
+            data.set("variations", JSON.stringify(validVariations));
 
-        images.forEach((image) => {
-            data.append("images", image); // Append base64 strings
-        });
+            images.forEach((image) => {
+                data.append("images", image);
+            });
 
-        const resultAction = dispatch(updateProduct({ id: params.id, data }));
+            const result = await dispatch(updateProduct({ id: params.id, data }));
 
-        toast.success("Product updated successfully!");
-        if (updateProduct.fulfilled.match(resultAction)) {
-            navigate("/admin/products");
-        } else if (updateProduct.rejected.match(resultAction)) {
-            const error = resultAction.payload || "Failed to update product!";
-            toast.error(error);
-            console.log("Error during product update:", error);
-            console.log("Full action details:", resultAction);
+            if (updateProduct.fulfilled.match(result)) {
+                toast.success(result.payload || "Product updated successfully!");
+                navigate("/admin/products");
+            } else if (updateProduct.rejected.match(result)) {
+                const errorMessage = result.payload || "Failed to update product!";
+                toast.error(errorMessage);
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "An error occurred while updating the product";
+            toast.error(errorMessage);
         }
     };
 
@@ -128,19 +163,45 @@ const UpdateProduct = () => {
             
             // Handle different variation formats
             if (product.variations && product.variations.length > 0) {
-                // Check if variations are in old format (strings)
-                if (typeof product.variations[0] === 'string') {
-                    // Convert old format to new format
-                    const newVariations = product.variations.map(variation => ({
-                        name: variation,
-                        color: "",
-                        image: null
-                    }));
-                    setVariations(newVariations);
-                } else {
-                    // Use new format
-                    setVariations(product.variations);
-                }
+                // Check if variations are in old format (strings) or partially converted format
+                const processedVariations = product.variations.map(variation => {
+                    // Case 1: String format (completely old)
+                    if (typeof variation === 'string') {
+                        return {
+                            name: variation,
+                            color: "",
+                            image: null
+                        };
+                    }
+                    // Case 2: Object format but with stringified JSON in name (partially converted)
+                    else if (variation.name && variation.name.startsWith('{') && variation.name.includes('"name":"')) {
+                        try {
+                            const parsedVariation = JSON.parse(variation.name);
+                            return {
+                                name: parsedVariation.name || "",
+                                color: parsedVariation.color || variation.color || "",
+                                image: variation.image || null
+                            };
+                        } catch (e) {
+                            // If parsing fails, use as is
+                            return {
+                                name: variation.name,
+                                color: variation.color || "",
+                                image: variation.image || null
+                            };
+                        }
+                    }
+                    // Case 3: Already in new format
+                    else {
+                        return {
+                            name: variation.name || "",
+                            color: variation.color || "",
+                            image: variation.image || null
+                        };
+                    }
+                });
+                
+                setVariations(processedVariations);
             } else {
                 setVariations([{ name: "", color: "", image: null }]);
             }
@@ -307,7 +368,7 @@ const UpdateProduct = () => {
                                                     {(variation.image?.url || variation.image) && (
                                                         <Box sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
                                                             <img
-                                                                src={variation.image?.url || variation.image}
+                                                                src={typeof variation.image === 'string' ? variation.image : variation.image?.url}
                                                                 alt={`Variation ${index + 1}`}
                                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px' }}
                                                             />

@@ -30,16 +30,19 @@ export const deleteCategory = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
     'products/updateProduct',
-    async ({ id, data }, { rejectWithValue }) => { // Combine id and data into an object
+    async ({ id, data }, { rejectWithValue }) => {
         try {
-
             const response = await axios.put(`${server}/api/v1/product/${id}`, data, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            return response.data.message;
+            if (response.data.success) {
+                return response.data.message || "Product updated successfully";
+            } else {
+                return rejectWithValue(response.data.message || "Failed to update product");
+            }
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Failed to Update Product');
+            return rejectWithValue(error.response?.data?.message || 'Failed to update product');
         }
     }
 );
@@ -169,7 +172,16 @@ const productsSlice = createSlice({
         message: null,
     },
     reducers: {
-        // Optionally, add reducers here if you need additional product-related actions
+        clearErrors: (state) => {
+            state.error = null;
+            state.createError = null;
+            state.updateError = null;
+            state.deleteError = null;
+            state.allCategoriesError = null;
+        },
+        clearMessage: (state) => {
+            state.message = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -264,12 +276,11 @@ const productsSlice = createSlice({
             })
             .addCase(updateProduct.fulfilled, (state, action) => {
                 state.updateLoading = false;
-                // state.message = action.payload.message; // Assuming the payload has a message
-                const index = state.items.findIndex(
-                    (product) => product?._id === action.payload.product?._id
-                );
-                if (index !== -1) {
-                    state.items[index] = action.payload.product;
+                state.message = action.payload;
+                // Update the product in the items array
+                const updatedProductIndex = state.items.findIndex(item => item._id === action.meta.arg.id);
+                if (updatedProductIndex !== -1) {
+                    state.items[updatedProductIndex] = { ...state.items[updatedProductIndex], ...action.meta.arg.data };
                 }
             })
             .addCase(updateProduct.rejected, (state, action) => {

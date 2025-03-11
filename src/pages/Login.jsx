@@ -12,37 +12,32 @@ const Login = () => {
     const dispatch = useDispatch();
     const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
-
     const navigate = useNavigate()
     if (isAuthenticated) return navigate("/")
 
     const handleSignIn = async (e) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
-            const { payload } = await dispatch(login({ email, password }));
-
-            if (payload && payload.user) {
-                dispatch(userExist(payload.user));
-                localStorage.setItem("user", JSON.stringify(payload.user));
-
-                navigate("/")
-            } else {
-                // User does not exist
+            const result = await dispatch(login({ email, password }));
+            
+            if (login.fulfilled.match(result)) {
+                const payload = result.payload;
+                if (payload && payload.user) {
+                    dispatch(userExist(payload.user));
+                    localStorage.setItem("user", JSON.stringify(payload.user));
+                    navigate("/");
+                }
+            } else if (login.rejected.match(result)) {
+                const errorMessage = result.payload?.message || 'Login failed. Please check your credentials.';
+                toast.error(errorMessage);
                 dispatch(userNotExist());
             }
-
         } catch (error) {
-            console.log(error);
+            const errorMessage = error.response?.data?.message || 'An error occurred during login.';
+            toast.error(errorMessage);
             dispatch(userNotExist());
-
-            toast.error(error.message)
         }
     };
-
-
-
-
-
 
     return (
         <section className="bg-gray-50 dark:bg-gray-900 mt-8">

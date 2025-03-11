@@ -13,6 +13,7 @@ const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const [selectedVariation, setSelectedVariation] = useState(null);
     const [hoveredVariationImage, setHoveredVariationImage] = useState(null);
+    const [hoveredVariation, setHoveredVariation] = useState(null);
     const { id } = useParams();
     const dispatch = useDispatch();
     const { product, loading, error } = useSelector((state) => state.productDetails);
@@ -62,11 +63,13 @@ const ProductDetails = () => {
     const handleVariationMouseEnter = (variation) => {
         if (variation.image && variation.image.url) {
             setHoveredVariationImage(variation.image.url);
+            setHoveredVariation(variation);
         }
     };
 
     const handleVariationMouseLeave = () => {
         setHoveredVariationImage(null);
+        setHoveredVariation(null);
     };
 
     // Settings for React-Slick Slider
@@ -92,10 +95,14 @@ const ProductDetails = () => {
         return (
             <div className='my-5'>
                 <h3 className="text-lg font-bold mb-3">
-                    Color Family: 
-                    {hasNewVariationStructure 
-                        ? (selectedVariation?.name || '') 
-                        : ''}
+                    Color Family: {' '}
+                    <span className={hoveredVariation ? 'text-blue-600 transition-colors duration-300' : ''}>
+                        {hoveredVariation 
+                            ? hoveredVariation.name 
+                            : (hasNewVariationStructure 
+                                ? (selectedVariation?.name || '') 
+                                : '')}
+                    </span>
                 </h3>
                 <div className="flex flex-wrap gap-3">
                     {product.variations.map((variation, index) => {
@@ -136,13 +143,25 @@ const ProductDetails = () => {
                 </div>
                 
                 {/* Selected Variation */}
-                {selectedVariation && (
+                {selectedVariation && !hoveredVariation && (
                     <div className="mt-3 text-gray-700">
                         Selected: <span className="font-semibold">
                             {typeof selectedVariation === 'string' 
                                 ? selectedVariation 
                                 : selectedVariation.name}
                         </span>
+                    </div>
+                )}
+                
+                {/* Hovered Variation */}
+                {hoveredVariation && (
+                    <div className="mt-3 text-blue-600 transition-all duration-300">
+                        Previewing: <span className="font-semibold">{hoveredVariation.name}</span>
+                        {hoveredVariation.color && (
+                            <span className="ml-2">
+                                (Color: <span className="font-semibold">{hoveredVariation.color}</span>)
+                            </span>
+                        )}
                     </div>
                 )}
             </div>

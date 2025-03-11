@@ -33,13 +33,20 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${server}/api/v1/user/login`, credentials); // Login API endpoint
-      toast.success(data.message)
-      console.log('yaar data received', data);
-
-      return data;
+      const { data } = await axios.post(`${server}/api/v1/user/login`, credentials);
+      if (data.success) {
+        toast.success(data.message || 'Login successful');
+        return data;
+      } else {
+        return rejectWithValue({
+          message: data.message || 'Login failed'
+        });
+      }
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Error during login');
+      const errorMessage = error.response?.data?.message || 'Invalid credentials';
+      return rejectWithValue({
+        message: errorMessage
+      });
     }
   }
 );
@@ -98,13 +105,15 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.error = null;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
-        localStorage.setItem('user', JSON.stringify(action.payload)); // Save user data on login success
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message || 'Login failed';
+        state.user = null;
+        state.isAuthenticated = false;
       });
   },
 
