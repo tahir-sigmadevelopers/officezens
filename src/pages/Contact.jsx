@@ -3,7 +3,7 @@ import React from 'react';
 const Contact = () => {
     return (
         <section className="text-gray-600 body-font relative mt-12">
-            <div className="container px-5 py-4 mx-auto flex sm:flex-nowrap flex-wrap">
+            <div className="container px-5 py-4  mx-auto flex sm:flex-nowrap flex-wrap">
                 <div className="lg:w-2/3 md:w-1/2  rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
                     <iframe
                         width="100%"
@@ -18,7 +18,7 @@ const Contact = () => {
                     ></iframe>
                    
                 </div>
-                <div className="lg:w-1/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
+                <div className="lg:w-1/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0 px-8 rounded-xl">
                     <h2 className="text-gray-900 text-xl mb-1 font-medium title-font ">Contact Us</h2>
                     <p className="leading-relaxed mb-5 mt-3 text-gray-600">Contact Us Now</p>
                     <div className="relative mb-4">
