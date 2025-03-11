@@ -11,9 +11,15 @@ import "slick-carousel/slick/slick-theme.css";
 
 const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
+    const [selectedVariation, setSelectedVariation] = useState(null);
     const { id } = useParams();
     const dispatch = useDispatch();
     const { product, loading, error } = useSelector((state) => state.productDetails);
+
+    // Check if variations have the new structure (objects with name, color, image)
+    const hasNewVariationStructure = product?.variations?.length > 0 && 
+        typeof product.variations[0] === 'object' && 
+        product.variations[0] !== null;
 
     useEffect(() => {
         dispatch(fetchProductDetails(id));
@@ -24,6 +30,13 @@ const ProductDetails = () => {
             toast.error(error);
         }
     }, [error]);
+
+    // Set the first variation as selected when product loads
+    useEffect(() => {
+        if (product && product.variations && product.variations.length > 0) {
+            setSelectedVariation(product.variations[0]);
+        }
+    }, [product]);
 
     const increaseQuantity = () => {
         if (quantity >= product.stock) return;
@@ -40,6 +53,10 @@ const ProductDetails = () => {
         toast.success("Item Added to Cart");
     };
 
+    const handleVariationClick = (variation) => {
+        setSelectedVariation(variation);
+    };
+
     // Settings for React-Slick Slider
     const settings = {
         dots: true,
@@ -54,6 +71,69 @@ const ProductDetails = () => {
         autoplaySpeed: 2000,
     };
 
+    // Function to render variations based on structure
+    const renderVariations = () => {
+        if (!product?.variations || product.variations.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className='my-5'>
+                <h3 className="text-lg font-bold mb-3">
+                    Color Family: 
+                    {hasNewVariationStructure 
+                        ? (selectedVariation?.name || '') 
+                        : ''}
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                    {product.variations.map((variation, index) => {
+                        // Handle both old (string) and new (object) variation structures
+                        const isOldStructure = typeof variation === 'string';
+                        const variationName = isOldStructure ? variation : variation.name;
+                        
+                        return (
+                            <div 
+                                key={index} 
+                                className={`cursor-pointer border-2 p-1 rounded-md transition-all ${selectedVariation === variation ? 'border-blue-500' : 'border-gray-300'}`}
+                                onClick={() => handleVariationClick(variation)}
+                            >
+                                {!isOldStructure && variation.image && variation.image.url ? (
+                                    <div className="relative w-14 ">
+                                        <img 
+                                            src={variation.image.url} 
+                                            alt={variationName} 
+                                            className="w-full h-full object-cover rounded "
+                                        />
+                                       
+                                    </div>
+                                ) : (
+                                    <div 
+                                        className="w-14 h-14 flex items-center justify-center bg-gray-100 rounded"
+                                        style={{ backgroundColor: !isOldStructure && variation.color ? variation.color : '#f3f4f6' }}
+                                    >
+                                        <span className="text-xs text-center block w-full overflow-hidden text-ellipsis whitespace-nowrap  px-1">
+                                            {variationName}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+                
+                {/* Selected Variation */}
+                {selectedVariation && (
+                    <div className="mt-3 text-gray-700">
+                        Selected: <span className="font-semibold">
+                            {typeof selectedVariation === 'string' 
+                                ? selectedVariation 
+                                : selectedVariation.name}
+                        </span>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="container mx-auto py-10 px-4 lg:px-12 mt-8">
@@ -89,16 +169,8 @@ const ProductDetails = () => {
                             </h1>
                             <div className="text-gray-600 mb-4" dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
 
-                            <div className='my-3'>
-                                <h3 className="text-lg font-bold">Variations:</h3>
-                                <ul className="list-disc pl-5">
-                                    {product?.variations?.map((variation, index) => (
-                                        <li key={index} className="text-green-700">
-                                            {variation}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            {/* Variations with Images */}
+                            {renderVariations()}
 
                             <div className="flex items-center space-x-2 text-gray-800 mb-4">
                                 <span className="text-2xl font-semibold"> Rs.{product?.price}</span>

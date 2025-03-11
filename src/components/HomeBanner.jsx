@@ -47,7 +47,7 @@ export const HomeNavbar = () => {
                         Dashboard
                     </Link>
                 )}
-                <div className="text-white w-32 py-1">📞 0317 5991373</div>
+                <div className="text-white w-36 py-1">📞 0317 5991373</div>
             </div>
         </div>
     );

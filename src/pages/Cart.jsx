@@ -36,7 +36,6 @@ const CartPage = () => {
         return accumulator + itemPrice;
     }, 0);
 
-    console.log(cartItems);
 
     const navigate = useNavigate();
     const checkOutHandler = () => {
