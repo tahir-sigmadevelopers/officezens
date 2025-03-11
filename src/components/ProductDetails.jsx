@@ -5,7 +5,6 @@ import { fetchProductDetails } from '../redux/reducers/product-details';
 import toast from 'react-hot-toast';
 import { Skeleton } from './Loader';
 import { addToCart } from '../redux/actions/cartActions';
-import parse from 'react-html-parser';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
