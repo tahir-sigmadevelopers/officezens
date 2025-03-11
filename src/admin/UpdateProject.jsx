@@ -22,7 +22,7 @@ const UpdateProduct = () => {
     const [price, setPrice] = useState(0);
     const [stock, setStock] = useState(0);
     const [images, setImages] = useState([]);
-    const [variations, setVariations] = useState([""]);
+    const [variations, setVariations] = useState([{ name: "", color: "", image: null }]);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -47,8 +47,36 @@ const UpdateProduct = () => {
         });
     }
 
+    const handleVariationImageChange = (index, e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (reader.readyState === 2) {
+                const updatedVariations = [...variations];
+                updatedVariations[index] = {
+                    ...updatedVariations[index],
+                    image: reader.result // Store base64 string
+                };
+                setVariations(updatedVariations);
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
     const updateProjectSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate variations
+        const validVariations = variations.filter(v => 
+            typeof v === 'string' ? v.trim() !== "" : v.name.trim() !== ""
+        );
+        
+        if (validVariations.length === 0) {
+            toast.error("Please add at least one variation");
+            return;
+        }
 
         const data = new FormData();
         data.set("name", name);
@@ -57,7 +85,9 @@ const UpdateProduct = () => {
         data.set("subCategory", subCategory);
         data.set("price", price);
         data.set("stock", stock);
-        data.set("variations", variations);
+        
+        // Convert variations to JSON string to preserve structure
+        data.set("variations", JSON.stringify(validVariations));
 
         images.forEach((image) => {
             data.append("images", image); // Append base64 strings
@@ -95,12 +125,27 @@ const UpdateProduct = () => {
             setPrice(product.price || 0);
             setStock(product.stock || 0);
             setImages(product.images || []);
-            setVariations(product.variations || [""]);
+            
+            // Handle different variation formats
+            if (product.variations && product.variations.length > 0) {
+                // Check if variations are in old format (strings)
+                if (typeof product.variations[0] === 'string') {
+                    // Convert old format to new format
+                    const newVariations = product.variations.map(variation => ({
+                        name: variation,
+                        color: "",
+                        image: null
+                    }));
+                    setVariations(newVariations);
+                } else {
+                    // Use new format
+                    setVariations(product.variations);
+                }
+            } else {
+                setVariations([{ name: "", color: "", image: null }]);
+            }
         }
     }, [product]);
-
-    console.log(product?.images);
-
 
     useEffect(() => {
         dispatch(fetchAllCategories());
@@ -110,14 +155,25 @@ const UpdateProduct = () => {
     const selectedCategory = allCategories.find(cat => cat?.category === category);
     const subCategories = selectedCategory ? selectedCategory?.subCategory : [];
 
-    const handleVariationsChange = (index, value) => {
+    const handleVariationChange = (index, field, value) => {
         const updatedVariations = [...variations];
-        updatedVariations[index] = value;
+        updatedVariations[index] = {
+            ...updatedVariations[index],
+            [field]: value
+        };
         setVariations(updatedVariations);
     };
 
     const addVariationsField = () => {
-        setVariations([...variations, ""]);
+        setVariations([...variations, { name: "", color: "", image: null }]);
+    };
+
+    const removeVariation = (index) => {
+        if (variations.length > 1) {
+            const updatedVariations = [...variations];
+            updatedVariations.splice(index, 1);
+            setVariations(updatedVariations);
+        }
     };
 
     return (
@@ -128,144 +184,198 @@ const UpdateProduct = () => {
                     <Typography variant="h4" gutterBottom>
                         Update Product
                     </Typography>
-                    <form onSubmit={updateProjectSubmit}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Name"
-                                    fullWidth
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <ReactQuill
-                                    theme="snow"
-                                    value={description}
-                                    onChange={setDescription}
-                                    style={{ height: '200px', paddingBottom: '25px', width: '100%' }} />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    select
-                                    label="Category"
-                                    fullWidth
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    SelectProps={{
-                                        native: true,
-                                    }}
-                                    required
-                                >
-                                    <option value="">Select Category</option>
-                                    {allCategories?.map((cat) => (
-                                        <option key={cat._id} value={cat.category}>
-                                            {cat.category}
-                                        </option>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    select
-                                    label="Sub Category"
-                                    fullWidth
-                                    value={subCategory}
-                                    onChange={(e) => setSubCategory(e.target.value)}
-                                    SelectProps={{
-                                        native: true,
-                                    }}
-                                    required
-                                >
-                                    <option value="">Select Sub Category</option>
-                                    {subCategories?.map((subCat, index) => (
-                                        <option key={index} value={subCat}>
-                                            {subCat}
-                                        </option>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Price"
-                                    type="number"
-                                    fullWidth
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Stock"
-                                    type="number"
-                                    fullWidth
-                                    value={stock}
-                                    onChange={(e) => setStock(e.target.value)}
-                                    required
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Typography variant="h6">Add Variations</Typography>
-                                {variations?.map((variation, index) => (
+                    {productLoading ? (
+                        <Skeleton />
+                    ) : (
+                        <form onSubmit={updateProjectSubmit}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
                                     <TextField
-                                        key={index}
-                                        label={`Variation ${index + 1}`}
+                                        label="Name"
                                         fullWidth
-                                        value={variation}
-                                        onChange={(e) => handleVariationsChange(index, e.target.value)}
-                                        margin="normal"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
                                     />
-                                ))}
-                                <Button onClick={addVariationsField} variant="outlined" sx={{ mt: 2 }}>
-                                    Add More Variations
-                                </Button>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <input
-                                    accept="image/*"
-                                    multiple
-                                    type="file"
-                                    onChange={imagesUploadChange}
-                                    style={{ display: 'none' }}
-                                    id="raised-button-file"
-                                />
-                                <label htmlFor="raised-button-file">
-                                    <Button variant="contained" component="span">
-                                        Upload Images
-                                    </Button>
-                                </label>
-                                <div className="flex gap-2 mt-2 w-10 overflow-hidden">
-                                    {images?.map((image, index) => (
-                                        <img
-                                            key={index}
-                                            src={image?.url || image}
-                                            alt={`Preview ${index + 1}`}
-                                            className="w-10 h-10"
-                                        />
-                                    ))}
-                                </div>
-                            </Grid>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={description}
+                                        onChange={setDescription}
+                                        style={{ height: '200px', paddingBottom: '25px', width: '100%' }} />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        select
+                                        label="Category"
+                                        fullWidth
+                                        value={category}
+                                        onChange={(e) => setCategory(e.target.value)}
+                                        SelectProps={{
+                                            native: true,
+                                        }}
+                                        required
+                                    >
+                                        <option value="">Select Category</option>
+                                        {allCategories?.map((cat) => (
+                                            <option key={cat._id} value={cat.category}>
+                                                {cat.category}
+                                            </option>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        select
+                                        label="Sub Category"
+                                        fullWidth
+                                        value={subCategory}
+                                        onChange={(e) => setSubCategory(e.target.value)}
+                                        SelectProps={{
+                                            native: true,
+                                        }}
+                                        required
+                                    >
+                                        <option value="">Select Sub Category</option>
+                                        {subCategories?.map((subCat, index) => (
+                                            <option key={index} value={subCat}>
+                                                {subCat}
+                                            </option>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        label="Price"
+                                        type="number"
+                                        fullWidth
+                                        value={price}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        label="Stock"
+                                        type="number"
+                                        fullWidth
+                                        value={stock}
+                                        onChange={(e) => setStock(e.target.value)}
+                                        required
+                                    />
+                                </Grid>
 
-                            <Grid item xs={12}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    fullWidth
-                                    disabled={updateLoading}
-                                >
-                                    {updateLoading ? 'Updating...' : 'Update Product'}
-                                </Button>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" gutterBottom>Product Variations</Typography>
+                                    {variations?.map((variation, index) => (
+                                        <Box key={index} sx={{ border: '1px solid #e0e0e0', p: 2, mb: 2, borderRadius: 1 }}>
+                                            <Grid container spacing={2}>
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        label="Variation Name"
+                                                        fullWidth
+                                                        value={variation.name}
+                                                        onChange={(e) => handleVariationChange(index, 'name', e.target.value)}
+                                                        margin="normal"
+                                                        required
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        label="Color Code (optional)"
+                                                        fullWidth
+                                                        value={variation.color}
+                                                        onChange={(e) => handleVariationChange(index, 'color', e.target.value)}
+                                                        margin="normal"
+                                                        placeholder="#RRGGBB"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <input
+                                                        accept="image/*"
+                                                        type="file"
+                                                        onChange={(e) => handleVariationImageChange(index, e)}
+                                                        style={{ display: 'none' }}
+                                                        id={`variation-image-${index}`}
+                                                    />
+                                                    <label htmlFor={`variation-image-${index}`}>
+                                                        <Button variant="outlined" component="span" sx={{ mt: 1 }}>
+                                                            {variation.image?.url ? 'Change Variation Image' : 'Upload Variation Image'}
+                                                        </Button>
+                                                    </label>
+                                                    {(variation.image?.url || variation.image) && (
+                                                        <Box sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
+                                                            <img
+                                                                src={variation.image?.url || variation.image}
+                                                                alt={`Variation ${index + 1}`}
+                                                                style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px' }}
+                                                            />
+                                                            <Typography variant="caption">Image uploaded</Typography>
+                                                        </Box>
+                                                    )}
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Button 
+                                                        onClick={() => removeVariation(index)} 
+                                                        variant="outlined" 
+                                                        color="error"
+                                                        disabled={variations.length <= 1}
+                                                    >
+                                                        Remove
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Box>
+                                    ))}
+                                    <Button onClick={addVariationsField} variant="outlined" sx={{ mt: 2 }}>
+                                        Add More Variations
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" gutterBottom>Product Images</Typography>
+                                    <input
+                                        accept="image/*"
+                                        multiple
+                                        type="file"
+                                        onChange={imagesUploadChange}
+                                        style={{ display: 'none' }}
+                                        id="raised-button-file"
+                                    />
+                                    <label htmlFor="raised-button-file">
+                                        <Button variant="contained" component="span">
+                                            Upload Product Images
+                                        </Button>
+                                    </label>
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+                                        {images?.map((image, index) => (
+                                            <img
+                                                key={index}
+                                                src={image?.url || image}
+                                                alt={`Preview ${index + 1}`}
+                                                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                            />
+                                        ))}
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                        disabled={updateLoading}
+                                    >
+                                        {updateLoading ? 'Updating...' : 'Update Product'}
+                                    </Button>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </form>
+                        </form>
+                    )}
                 </Container>
             </Box>
         </Box>
     );
-}
+};
 
 export default UpdateProduct;
