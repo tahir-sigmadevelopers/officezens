@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   display: none;
-}
+} */
 
 /* ProductDetails.css */
 .slick-arrow {
