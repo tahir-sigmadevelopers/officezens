@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { fetchProductDetails } from '../redux/reducers/product-details';
@@ -12,9 +12,11 @@ import "slick-carousel/slick/slick-theme.css";
 const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const [selectedVariation, setSelectedVariation] = useState(null);
+    const [hoveredVariationImage, setHoveredVariationImage] = useState(null);
     const { id } = useParams();
     const dispatch = useDispatch();
     const { product, loading, error } = useSelector((state) => state.productDetails);
+    const sliderRef = useRef(null);
 
     // Check if variations have the new structure (objects with name, color, image)
     const hasNewVariationStructure = product?.variations?.length > 0 && 
@@ -57,6 +59,16 @@ const ProductDetails = () => {
         setSelectedVariation(variation);
     };
 
+    const handleVariationMouseEnter = (variation) => {
+        if (variation.image && variation.image.url) {
+            setHoveredVariationImage(variation.image.url);
+        }
+    };
+
+    const handleVariationMouseLeave = () => {
+        setHoveredVariationImage(null);
+    };
+
     // Settings for React-Slick Slider
     const settings = {
         dots: true,
@@ -96,13 +108,15 @@ const ProductDetails = () => {
                                 key={index} 
                                 className={`cursor-pointer border-2 p-1 rounded-md transition-all ${selectedVariation === variation ? 'border-blue-500' : 'border-gray-300'}`}
                                 onClick={() => handleVariationClick(variation)}
+                                onMouseEnter={() => !isOldStructure && handleVariationMouseEnter(variation)}
+                                onMouseLeave={handleVariationMouseLeave}
                             >
                                 {!isOldStructure && variation.image && variation.image.url ? (
-                                    <div className="relative w-14 ">
+                                    <div className="relative w-14">
                                         <img 
                                             src={variation.image.url} 
                                             alt={variationName} 
-                                            className="w-full h-full object-cover rounded "
+                                            className="w-full h-full object-cover rounded"
                                         />
                                        
                                     </div>
@@ -111,7 +125,7 @@ const ProductDetails = () => {
                                         className="w-14 h-14 flex items-center justify-center bg-gray-100 rounded"
                                         style={{ backgroundColor: !isOldStructure && variation.color ? variation.color : '#f3f4f6' }}
                                     >
-                                        <span className="text-xs text-center block w-full overflow-hidden text-ellipsis whitespace-nowrap  px-1">
+                                        <span className="text-xs text-center block w-full overflow-hidden text-ellipsis whitespace-nowrap px-1">
                                             {variationName}
                                         </span>
                                     </div>
@@ -146,9 +160,20 @@ const ProductDetails = () => {
                     <div className="flex flex-wrap">
                         {/* Left Section - Product Images */}
                         <div className="w-full lg:w-1/2 flex flex-col">
-                            <div className="mb-4">
+                            <div className="mb-4 relative">
+                                {/* Hovered Variation Image Overlay */}
+                                {hoveredVariationImage && (
+                                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white rounded-lg">
+                                        <img
+                                            src={hoveredVariationImage}
+                                            alt="Variation Preview"
+                                            className="rounded-lg w-full h-[550px] object-contain"
+                                        />
+                                    </div>
+                                )}
+                                
                                 {/* Image Carousel */}
-                                <Slider {...settings}>
+                                <Slider ref={sliderRef} {...settings}>
                                     {product?.images?.map((img) => (
                                         <div key={img._id}>
                                             <img
