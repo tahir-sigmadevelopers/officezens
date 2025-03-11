@@ -22,6 +22,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import JazzcashPayment from "./components/JazzcashPayment";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import ScrollToTop from "./components/ScrollToTop";
 
 // Admin Imports 
 import Dashboard from './admin/Dashboard';
@@ -76,7 +77,12 @@ const AppContent = () => {
         <Route path="/admin/product/:id" element={<PrivateRoute element={<UpdateProduct />} />} />
       </Routes>
 
-      {!isAdminPath && <Footer />} {/* Conditionally render Footer */}
+      {!isAdminPath && (
+        <>
+          <ScrollToTop />
+          <Footer />
+        </>
+      )}
     </>
   );
 };
