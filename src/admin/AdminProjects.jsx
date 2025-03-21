@@ -14,6 +14,8 @@ const AdminProjects = () => {
     const dispatch = useDispatch()
     const { loading, items: products, deleteSuccess, deleteError } = useSelector(state => state.products)
 
+
+
     const deleteProductHandle = async (productId) => {
         await dispatch(deleteProduct(productId))
         toast.success('Product Deleted Successfully')
