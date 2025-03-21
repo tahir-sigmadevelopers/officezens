@@ -5,11 +5,26 @@ import axios from 'axios';
 import { server } from '../constants';
 import toast from 'react-hot-toast';
 
+// Try to initialize state from localStorage if available
+const getUserFromStorage = () => {
+  try {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      return parsedUser;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error parsing user from localStorage:', error);
+    return null;
+  }
+};
+
 const initialState = {
-  user: null,
+  user: getUserFromStorage(),
   loading: false,
   error: null,
-  isAuthenticated: false,
+  isAuthenticated: !!getUserFromStorage(),
 };
 
 // Async action to handle signup
@@ -17,11 +32,14 @@ export const signup = createAsyncThunk(
   'auth/signup',
   async (userData, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post(`${server}/api/v1/user/register`, userData); // Signup API endpoint
-      toast.success(data.message)
-
-      return data;
-
+      const { data } = await axios.post(`${server}/api/v1/user/register`, userData);
+      if (data.success) {
+        return data;
+      } else {
+        return rejectWithValue({
+          message: data.message || 'Signup failed'
+        });
+      }
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Error during signup');
     }
@@ -35,7 +53,6 @@ export const login = createAsyncThunk(
     try {
       const { data } = await axios.post(`${server}/api/v1/user/login`, credentials);
       if (data.success) {
-        toast.success(data.message || 'Login successful');
         return data;
       } else {
         return rejectWithValue({
@@ -51,22 +68,23 @@ export const login = createAsyncThunk(
   }
 );
 
-
-export const getUser = async (id) => {
-  try {
-    const { data } = await axios.get(`${server}/api/v1/user/${id}`)
-
-    return data;
-
-  } catch (error) {
-    return rejectWithValue(error.response?.data || 'Error during Get User');
+// Get user data (for checking if token is valid)
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${server}/api/v1/user/${id}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Error fetching user data');
+    }
   }
-}
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
@@ -81,6 +99,13 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.loading = false;
+      localStorage.removeItem('user');
+    },
+    // Sync Redux state with localStorage
+    syncWithStorage: (state) => {
+      const storedUser = getUserFromStorage();
+      state.user = storedUser;
+      state.isAuthenticated = !!storedUser;
     }
   },
   extraReducers: (builder) => {
@@ -91,13 +116,14 @@ const authSlice = createSlice({
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
-        localStorage.setItem('user', JSON.stringify(action.payload)); // Save user data on signup success
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        toast.error(action.payload?.message || 'Signup failed');
       })
       .addCase(login.pending, (state) => {
         state.loading = true;
@@ -108,17 +134,32 @@ const authSlice = createSlice({
         state.error = null;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || 'Login failed';
         state.user = null;
         state.isAuthenticated = false;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        if (action.payload.success && action.payload.user) {
+          state.user = action.payload.user;
+          state.isAuthenticated = true;
+        } else {
+          state.user = null;
+          state.isAuthenticated = false;
+          localStorage.removeItem('user');
+        }
+      })
+      .addCase(getUser.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+        localStorage.removeItem('user');
       });
   },
-
 });
 
-export const { logout, userExist, userNotExist } = authSlice.actions;
+export const { logout, userExist, userNotExist, syncWithStorage } = authSlice.actions;
 
 export default authSlice.reducer;

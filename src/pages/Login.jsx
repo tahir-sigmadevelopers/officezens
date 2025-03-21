@@ -6,14 +6,18 @@ import { login, userExist, userNotExist } from '../redux/reducers/auth';
 import axios from 'axios';
 
 const Login = () => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
     const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
-
-    const navigate = useNavigate()
-    if (isAuthenticated) return navigate("/")
+    const navigate = useNavigate();
+    
+    // Check if user is already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/");
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -23,9 +27,21 @@ const Login = () => {
             if (login.fulfilled.match(result)) {
                 const payload = result.payload;
                 if (payload && payload.user) {
+                    // First update the Redux state
                     dispatch(userExist(payload.user));
+                    
+                    // Then update localStorage
                     localStorage.setItem("user", JSON.stringify(payload.user));
-                    navigate("/");
+                    
+                    // Show success message
+                    toast.success("Login successful!");
+                    
+                    // Navigate to home page
+                    setTimeout(() => {
+                        navigate("/");
+                        // Optional: Force page reload to ensure all components update
+                        // window.location.reload();
+                    }, 300);
                 }
             } else if (login.rejected.match(result)) {
                 const errorMessage = result.payload?.message || 'Login failed. Please check your credentials.';
@@ -68,8 +84,14 @@ const Login = () => {
                                 </div>
                                 <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                             </div> */}
-                            <button type="submit" className="w-full text-white bg-black hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Sign in</button>
-                            <p className="text-sm font-light  dark:text-gray-400">
+                            <button 
+                                type="submit" 
+                                className="w-full text-white bg-black hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                disabled={loading}
+                            >
+                                {loading ? "Signing in..." : "Sign in"}
+                            </button>
+                            <p className="text-sm font-light dark:text-gray-400">
                                 Don&apos;t have an account yet? <Link to={"/signup"} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
                             </p>
                         </form>

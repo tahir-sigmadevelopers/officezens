@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import axios from "axios";
 import { server } from "./redux/constants";
-import { userExist, userNotExist } from "./redux/reducers/auth";
+import { userExist, userNotExist, syncWithStorage, getUser } from "./redux/reducers/auth";
 import { useDispatch, useSelector } from "react-redux";
 import Products from "./pages/Products";
 import Shipping from "./pages/Shipping";
@@ -37,12 +37,21 @@ import AdminCategory from "./admin/AdminCategory";
 
 // PrivateRoute component
 const PrivateRoute = ({ element }) => {
-  const user = localStorage.getItem('user');
-  return user ? element : <Navigate to="/login" />;
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const storedUser = localStorage.getItem('user');
+  
+  // Check both Redux state and localStorage
+  return isAuthenticated || storedUser ? element : <Navigate to="/login" />;
 };
 
 const AppContent = () => {
   const location = useLocation(); // Get the current location
+  const dispatch = useDispatch();
+  
+  // Sync auth state when location changes (after navigation)
+  useEffect(() => {
+    dispatch(syncWithStorage());
+  }, [location.pathname, dispatch]);
 
   // Determine if the current path is an admin path
   const isAdminPath = location.pathname.startsWith('/admin');
@@ -91,39 +100,54 @@ const AppContent = () => {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2', // Change this to your desired primary color
+      main: '#1976d2',
     },
     background: {
-      default: '#f0f0f0', // Change this to your desired background color
+      default: '#f0f0f0',
     },
   },
 });
 
 const App = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  // On app load, ensure Redux state is synced with localStorage
   useEffect(() => {
-    const checkUser = async () => {
-      if (!user || !user._id) {
-        return;
-      }
+    dispatch(syncWithStorage());
+  }, [dispatch]);
 
+  // Verify user token is still valid if user is logged in
+  useEffect(() => {
+    const verifyUser = async () => {
       try {
-        const response = await axios.get(`${server}/user/${user._id}`);
-        if (response.data && response.data.user) {
-          dispatch(userExist(response.data.user));
+        // First check if we have a user in redux state or localStorage
+        const hasUser = user || localStorage.getItem('user');
+        if (!hasUser) return;
+        
+        // If we have a user object with an ID, verify it with the server
+        if (user?._id) {
+          dispatch(getUser(user._id));
         } else {
-          dispatch(userNotExist());
+          // Try to get user ID from localStorage
+          try {
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            if (storedUser && storedUser._id) {
+              dispatch(getUser(storedUser._id));
+            }
+          } catch (error) {
+            console.error('Error parsing user from localStorage:', error);
+            dispatch(userNotExist());
+          }
         }
       } catch (error) {
-        console.error('Error checking user:', error);
+        console.error('Error verifying user:', error);
         dispatch(userNotExist());
       }
     };
 
-    checkUser();
-  }, [dispatch]);
+    verifyUser();
+  }, [dispatch, user]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -131,7 +155,6 @@ const App = () => {
       <Router>
         <AppContent />
       </Router>
-
       <Toaster />
     </ThemeProvider>
   );
