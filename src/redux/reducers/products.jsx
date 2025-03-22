@@ -170,6 +170,7 @@ const productsSlice = createSlice({
         updateError: null,
         allCategoriesError: null,
         message: null,
+        clearMessage: null,
     },
     reducers: {
         clearErrors: (state) => {

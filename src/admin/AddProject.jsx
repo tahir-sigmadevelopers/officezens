@@ -18,9 +18,9 @@ const AddProduct = () => {
     const [price, setprice] = useState(0)
     const [stock, setStock] = useState(0)
     const [images, setImages] = useState([]);
+    const [productCreated, setProductCreated] = useState(false);
 
     const navigate = useNavigate()
-
     const dispatch = useDispatch()
 
     const { createError, message, createLoading, allCategories } = useSelector(state => state.products)
@@ -86,25 +86,79 @@ const AddProduct = () => {
             data.append("images", image); // Append base64 strings
         });
 
-        dispatch(createProduct(data));
-        if (!createError) {
-            toast.success(message);
-            setTitle("");
-            setDescription("");
-            setCategory("");
-            setprice(0);
-            setStock(0);
-            setImages([]);
-            setVariations([{ name: "", color: "", image: null }]);
-            navigate("/admin/products");
-        } else {
-            toast.error("Error Creating product");
-        }
+        console.log("Submitting product data");
+        const result = await dispatch(createProduct(data));
+        console.log("Product creation result:", result);
+        // Mark that we've attempted to create a product
+        setProductCreated(true);
     };
 
+    // Fetch categories on component mount
     useEffect(() => {
         dispatch(fetchAllCategories());
     }, [dispatch]);
+
+    // Handle product creation response
+    useEffect(() => {
+        console.log("State update - productCreated:", productCreated);
+        console.log("Current message:", message);
+        console.log("Loading state:", createLoading);
+        console.log("Error state:", createError);
+        
+        // Only run this if we've attempted to create a product
+        if (productCreated) {
+            if (!createLoading) {
+                if (message) {
+                    console.log("Success condition met, navigating");
+                    toast.success(message || "Product created successfully!");
+                    
+                    // Reset form
+                    setTitle("");
+                    setDescription("");
+                    setCategory("");
+                    setSubCategory("");
+                    setprice(0);
+                    setStock(0);
+                    setImages([]);
+                    setVariations([{ name: "", color: "", image: null }]);
+                    
+                    // Reset product created flag
+                    setProductCreated(false);
+                    
+                    // Navigate to products page with a slight delay to ensure toast is visible
+                    setTimeout(() => {
+                        navigate("/admin/products");
+                    }, 1000);
+                } else if (createError) {
+                    console.log("Error condition met");
+                    toast.error(createError || "Error creating product");
+                    setProductCreated(false);
+                } else {
+                    // No message and no error but loading is done
+                    if (!message && !createError) {
+                        console.log("No message but product likely created");
+                        toast.success("Product likely created successfully!");
+                        setProductCreated(false);
+                        
+                        // Reset form
+                        setTitle("");
+                        setDescription("");
+                        setCategory("");
+                        setSubCategory("");
+                        setprice(0);
+                        setStock(0);
+                        setImages([]);
+                        setVariations([{ name: "", color: "", image: null }]);
+                        
+                        // Navigate to products page with a slight delay
+                        setTimeout(() => {
+                            navigate("/admin/products");
+                        }, 1000);
+                    }
+                }
+            }
+        }
+    }, [message, createError, createLoading, navigate, productCreated]);
 
     const handleVariationChange = (index, field, value) => {
         const updatedVariations = [...variations];
