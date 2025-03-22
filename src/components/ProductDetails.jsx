@@ -95,12 +95,12 @@ const ProductDetails = () => {
         return (
             <div className='my-5'>
                 <h3 className="text-lg font-bold mb-3">
-                    Color Family: {' '}
+                    Variations: {' '}
                     <span className={hoveredVariation ? 'text-blue-600 transition-colors duration-300' : ''}>
                         {hoveredVariation 
-                            ? hoveredVariation.name 
+                            ? `${hoveredVariation.name} - PKR.${hoveredVariation.price || 0}` 
                             : (hasNewVariationStructure 
-                                ? (selectedVariation?.name || '') 
+                                ? `${selectedVariation?.name || ''} - PKR.${selectedVariation?.price || 0}` 
                                 : '')}
                     </span>
                 </h3>
@@ -109,11 +109,14 @@ const ProductDetails = () => {
                         // Handle both old (string) and new (object) variation structures
                         const isOldStructure = typeof variation === 'string';
                         const variationName = isOldStructure ? variation : variation.name;
+                        const variationPrice = isOldStructure ? 0 : (variation.price || 0);
                         
                         return (
-                            <div 
-                                key={index} 
-                                className={`cursor-pointer border-2 p-1 rounded-md transition-all ${selectedVariation === variation ? 'border-blue-500' : 'border-gray-300'}`}
+                            <div
+                                key={index}
+                                className={`border px-3 py-1 rounded cursor-pointer ${
+                                    selectedVariation === variation ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                                }`}
                                 onClick={() => handleVariationClick(variation)}
                                 onMouseEnter={() => !isOldStructure && handleVariationMouseEnter(variation)}
                                 onMouseLeave={handleVariationMouseLeave}
@@ -137,6 +140,7 @@ const ProductDetails = () => {
                                         </span>
                                     </div>
                                 )}
+                                {!isOldStructure && <span className="ml-2 text-blue-600">PKR. {variationPrice}</span>}
                             </div>
                         );
                     })}

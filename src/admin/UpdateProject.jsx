@@ -22,7 +22,7 @@ const UpdateProduct = () => {
     const [price, setPrice] = useState(0);
     const [stock, setStock] = useState(0);
     const [images, setImages] = useState([]);
-    const [variations, setVariations] = useState([{ name: "", color: "", image: null }]);
+    const [variations, setVariations] = useState([{ name: "", price: 0, image: null }]);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -90,13 +90,13 @@ const UpdateProduct = () => {
             }).map(v => {
                 // Normalize variation format
                 if (typeof v === 'string') {
-                    return { name: v, color: "", image: null };
+                    return { name: v, price: 0, image: null };
                 } else if (v.name && v.name.startsWith('{') && v.name.includes('"name":"')) {
                     try {
                         const parsed = JSON.parse(v.name);
                         return {
                             name: parsed.name || "",
-                            color: parsed.color || v.color || "",
+                            price: parsed.price || v.price || 0,
                             image: v.image || null
                         };
                     } catch (e) {
@@ -169,7 +169,7 @@ const UpdateProduct = () => {
                     if (typeof variation === 'string') {
                         return {
                             name: variation,
-                            color: "",
+                            price: 0,
                             image: null
                         };
                     }
@@ -179,14 +179,14 @@ const UpdateProduct = () => {
                             const parsedVariation = JSON.parse(variation.name);
                             return {
                                 name: parsedVariation.name || "",
-                                color: parsedVariation.color || variation.color || "",
+                                price: parsedVariation.price || variation.price || 0,
                                 image: variation.image || null
                             };
                         } catch (e) {
                             // If parsing fails, use as is
                             return {
                                 name: variation.name,
-                                color: variation.color || "",
+                                price: variation.price || 0,
                                 image: variation.image || null
                             };
                         }
@@ -195,7 +195,7 @@ const UpdateProduct = () => {
                     else {
                         return {
                             name: variation.name || "",
-                            color: variation.color || "",
+                            price: variation.price || 0,
                             image: variation.image || null
                         };
                     }
@@ -203,7 +203,7 @@ const UpdateProduct = () => {
                 
                 setVariations(processedVariations);
             } else {
-                setVariations([{ name: "", color: "", image: null }]);
+                setVariations([{ name: "", price: 0, image: null }]);
             }
         }
     }, [product]);
@@ -226,7 +226,7 @@ const UpdateProduct = () => {
     };
 
     const addVariationsField = () => {
-        setVariations([...variations, { name: "", color: "", image: null }]);
+        setVariations([...variations, { name: "", price: 0, image: null }]);
     };
 
     const removeVariation = (index) => {
@@ -343,13 +343,17 @@ const UpdateProduct = () => {
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={6}>
-                                    <TextField
-                                                        label="Color Code (optional)"
-                                        fullWidth
-                                                        value={variation.color}
-                                                        onChange={(e) => handleVariationChange(index, 'color', e.target.value)}
-                                        margin="normal"
-                                                        placeholder="#RRGGBB"
+                                                    <TextField
+                                                        label="Variation Price"
+                                                        type="number"
+                                                        fullWidth
+                                                        value={variation.price}
+                                                        onChange={(e) => handleVariationChange(index, 'price', e.target.value)}
+                                                        margin="normal"
+                                                        InputProps={{
+                                                            startAdornment: <span>PKR</span>,
+                                                        }}
+                                                        required
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12}>

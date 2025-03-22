@@ -12,7 +12,7 @@ const AddProduct = () => {
 
     const [name, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [variations, setVariations] = useState([{ name: "", color: "", image: null }])
+    const [variations, setVariations] = useState([{ name: "", price: 0, image: null }])
     const [category, setCategory] = useState("")
     const [subCategory, setSubCategory] = useState("")
     const [price, setprice] = useState(0)
@@ -100,10 +100,7 @@ const AddProduct = () => {
 
     // Handle product creation response
     useEffect(() => {
-        console.log("State update - productCreated:", productCreated);
-        console.log("Current message:", message);
-        console.log("Loading state:", createLoading);
-        console.log("Error state:", createError);
+    
         
         // Only run this if we've attempted to create a product
         if (productCreated) {
@@ -120,7 +117,7 @@ const AddProduct = () => {
                     setprice(0);
                     setStock(0);
                     setImages([]);
-                    setVariations([{ name: "", color: "", image: null }]);
+                    setVariations([{ name: "", price: 0, image: null }]);
                     
                     // Reset product created flag
                     setProductCreated(false);
@@ -148,7 +145,7 @@ const AddProduct = () => {
                         setprice(0);
                         setStock(0);
                         setImages([]);
-                        setVariations([{ name: "", color: "", image: null }]);
+                        setVariations([{ name: "", price: 0, image: null }]);
                         
                         // Navigate to products page with a slight delay
                         setTimeout(() => {
@@ -170,7 +167,7 @@ const AddProduct = () => {
     };
 
     const addVariationsField = () => {
-        setVariations([...variations, { name: "", color: "", image: null }]);
+        setVariations([...variations, { name: "", price: 0, image: null }]);
     };
 
     const removeVariation = (index) => {
@@ -291,12 +288,16 @@ const AddProduct = () => {
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                                 <TextField
-                                                    label="Color Code (optional)"
+                                                    label="Variation Price"
+                                                    type="number"
                                                     fullWidth
-                                                    value={variation.color}
-                                                    onChange={(e) => handleVariationChange(index, 'color', e.target.value)}
+                                                    value={variation.price}
+                                                    onChange={(e) => handleVariationChange(index, 'price', e.target.value)}
                                                     margin="normal"
-                                                    placeholder="#RRGGBB"
+                                                    InputProps={{
+                                                        startAdornment: <span>PKR</span>,
+                                                    }}
+                                                    required
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
