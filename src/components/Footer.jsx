@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo and subscription */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">Office Zens</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Relax Chair</h2>
           <p>Subscribe to our newsletter for the latest updates and exclusive offers.</p>
           <div className="flex mt-4">
             <input
@@ -41,7 +41,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center mt-8 border-t border-gray-700 pt-4">
-        <p className="text-gray-500">&copy; {new Date().getFullYear()} office zens. All rights reserved.</p>
+        <p className="text-gray-500">&copy; {new Date().getFullYear()} Relax Chair. All rights reserved.</p>
       </div>
     </footer>
   );
