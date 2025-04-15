@@ -12,7 +12,7 @@ const About = () => {
                             About Us
                         </h2>
                         <p className="text-lg leading-7 text-gray-800  p-6   rounded-lg">
-                            At Office Zens, we've been committed to providing reliable products that meet the highest standards of excellence. We understand that a well-designed office is the foundation of productivity, collaboration, and success. 
+                            At Relax Chair, we've been committed to providing reliable products that meet the highest standards of excellence. We understand that a well-designed office is the foundation of productivity, collaboration, and success. 
                             <br /><br />
                             That's why we specialize in providing reliable, high-quality office furniture solutions that elevate your workspace. With years of experience in the industry, we offer a wide range of durable, functional, and stylish furniture designed to meet the diverse needs of businesses, from startups to large corporations. 
                             <br /><br />
