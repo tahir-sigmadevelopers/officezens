@@ -27,28 +27,28 @@ const LatestTrends = () => {
   };
 
   return (
-    <section className="p-10 bg-gray-50">
-      <h2 className="text-3xl font-bold text-gray-800 text-center">Discover the Latest Trends</h2>
-      <p className="mt-2 text-gray-600 text-center">
+    <section className="px-4 py-8 md:p-10 bg-gray-50">
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center">Discover the Latest Trends</h2>
+      <p className="mt-2 text-sm md:text-base text-gray-600 text-center px-2">
         Stay updated with our information and engaging blog posts about modern furniture and fashion in the industry.
       </p>
       {latestLoading ? <Skeleton length={6} /> :
         <>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
 
 
             {
               oldItems && oldItems?.map(product => (
-                <div className="p-4 border rounded-lg shadow" key={product?._id}>
+                <div className="p-3 md:p-4 border rounded-lg shadow" key={product?._id}>
                   <Link to={`/product/${product?._id}`}>
-                    <img src={product?.images[0]?.url} alt="Trend" className="w-full rounded-md" />
+                    <img src={product?.images[0]?.url} alt="Trend" className="w-full h-40 md:h-48 object-cover rounded-md" />
                   </Link>
-                  <h3 className="mt-2 text-lg font-semibold mb-2 text-gray-800">{product?.name}</h3>
-                  <div className="text-gray-600 mb-4" dangerouslySetInnerHTML={{ __html: product?.description.slice(0, 100) + (product?.description?.length > 100 ? "..." : "") || '' }} />
+                  <h3 className="mt-2 text-base md:text-lg font-semibold mb-1 text-gray-800 truncate">{product?.name}</h3>
+                  <div className="text-sm text-gray-600 mb-3 line-clamp-2" dangerouslySetInnerHTML={{ __html: product?.description.slice(0, 100) + (product?.description?.length > 100 ? "..." : "") || '' }} />
 
-                  <h3 className="mt-2 text-lg font-semibold text-gray-800">Rs. {product?.price}</h3>
+                  <h3 className="mt-1 text-base md:text-lg font-semibold text-gray-800">Rs. {product?.price}</h3>
 
-                  <button onClick={() => addToCartHandler(product?._id, 1)} className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-full">Add to Cart</button>
+                  <button onClick={() => addToCartHandler(product?._id, 1)} className="w-full mt-1 px-4 py-2 bg-yellow-500 text-white text-sm md:text-base rounded-full hover:bg-yellow-600 transition-colors">Add to Cart</button>
                 </div>
               ))
             }

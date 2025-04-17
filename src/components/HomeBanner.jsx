@@ -12,6 +12,7 @@ import "swiper/css/pagination";
 export const HomeNavbar = () => {
     const { user, isAuthenticated } = useSelector((state) => state.auth);
     const [userData, setUserData] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
     const dispatch = useDispatch();
 
@@ -50,41 +51,87 @@ export const HomeNavbar = () => {
     };
 
     return (
-        <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center py-2 px-8 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90 mb-8">
-            <div className="flex space-x-4 pr-8">
-                <Link to="/" className="text-white hover:text-gray-300">Home</Link>
-                <Link to="/products" className="text-white hover:text-gray-300">Products</Link>
-                <Link to="/about" className="text-white hover:text-gray-300">About</Link>
-                <Link to="/contact" className="text-white hover:text-gray-300 w-28">Contact Us</Link>
-               
+        <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90 mb-8">
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex justify-between items-center py-2 px-4">
+                <Link to="/" className="text-white text-xl font-bold">OfficeZens</Link>
+                <button 
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="text-white p-2"
+                >
+                    {isMenuOpen ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    )}
+                </button>
             </div>
-            
-            <div className="overflow-hidden py-2 rounded-sm ml-2">
-                <div className="overflow-hidden rounded-sm">
-                    <div className="scroll-text text-white font-semibold">
-                        <p className="uppercase">Pakistan's largest office furniture brand</p>
-                        <p className="uppercase">Within Lahore provide the same day delivery</p>
-                        <p className="uppercase">Other cities delivery time will be 4 to 5 working days</p>
-                    </div>
+
+            {/* Mobile Menu */}
+            <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} py-2 px-4`}>
+                <div className="flex flex-col space-y-3">
+                    <Link to="/" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>Home</Link>
+                    <Link to="/products" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>Products</Link>
+                    <Link to="/about" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>About</Link>
+                    <Link to="/contact" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>Contact Us</Link>
+                    <Link to="/cart" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>Cart</Link>
+                    
+                    {!isUserLoggedIn ? (
+                        <Link to="/login" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>Log In</Link>
+                    ) : (
+                        <button onClick={() => {logoutHandler(); setIsMenuOpen(false);}} className="text-white hover:text-gray-300 text-left">Log Out</button>
+                    )}
+                    
+                    {isAdmin && (
+                        <Link to="/admin/dashboard" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                            Dashboard
+                        </Link>
+                    )}
+                    
+                    <div className="text-white py-1">📞 0317 5991373</div>
                 </div>
             </div>
-            
-            <div className="flex items-center space-x-6 px-4 ml-4">
-                <Link to="/cart" className="text-white hover:text-gray-300">Cart</Link>
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex justify-between items-center py-2 px-8">
+                <div className="flex space-x-4 pr-8">
+                    <Link to="/" className="text-white hover:text-gray-300">Home</Link>
+                    <Link to="/products" className="text-white hover:text-gray-300">Products</Link>
+                    <Link to="/about" className="text-white hover:text-gray-300">About</Link>
+                    <Link to="/contact" className="text-white hover:text-gray-300 w-28">Contact Us</Link>
+                </div>
                 
-                {!isUserLoggedIn ? (
-                    <Link to="/login" className="text-white hover:text-gray-300 w-28 py-2">Log In</Link>
-                ) : (
-                    <button onClick={logoutHandler} className="text-white hover:text-gray-300 w-28 py-2">Log Out</button>
-                )}
+                <div className="overflow-hidden py-2 rounded-sm ml-2">
+                    <div className="overflow-hidden rounded-sm">
+                        <div className="scroll-text text-white font-semibold">
+                            <p className="uppercase">Pakistan's largest office furniture brand</p>
+                            <p className="uppercase">Within Lahore provide the same day delivery</p>
+                            <p className="uppercase">Other cities delivery time will be 4 to 5 working days</p>
+                        </div>
+                    </div>
+                </div>
                 
-                {isAdmin && (
-                    <Link to="/admin/dashboard" className="text-white hover:text-gray-300">
-                        Dashboard
-                    </Link>
-                )}
-                
-                <div className="text-white w-36 py-1">📞 0317 5991373</div>
+                <div className="flex items-center space-x-6 px-4 ml-4">
+                    <Link to="/cart" className="text-white hover:text-gray-300">Cart</Link>
+                    
+                    {!isUserLoggedIn ? (
+                        <Link to="/login" className="text-white hover:text-gray-300 w-28 py-2">Log In</Link>
+                    ) : (
+                        <button onClick={logoutHandler} className="text-white hover:text-gray-300 w-28 py-2">Log Out</button>
+                    )}
+                    
+                    {isAdmin && (
+                        <Link to="/admin/dashboard" className="text-white hover:text-gray-300">
+                            Dashboard
+                        </Link>
+                    )}
+                    
+                    <div className="text-white w-36 py-1">📞 0317 5991373</div>
+                </div>
             </div>
         </div>
     );
@@ -93,67 +140,52 @@ export const HomeNavbar = () => {
 
 const Carousel = () => {
     return (
-        <div className="mt-8">
+        <div className="mt-16 md:mt-8">
             <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={0}
                 slidesPerView={1}
                 navigation
+                pagination={{ clickable: true }}
                 autoplay={{ delay: 3000, disableOnInteraction: false }}
                 loop={true}
             >
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg-1.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/bg-1.jpg" alt="Chair 3" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
-                        {/* <div className="absolute inset-0 flex items-center justify-center">
-                            {/* <h2 className="text-white text-4xl font-bold">Welcome to Our Collection</h2> */}
-                            {/* <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div>  */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg-2.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/bg-2.jpg" alt="Chair 3" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
-                        {/* <div className="absolute inset-0 flex items-center justify-center">
-                            <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div> */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg-3.jpg" alt="Chair 1" className="w-full h-screen object-cover" />
+                        <img src="/bg-3.jpg" alt="Chair 1" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
-                        {/* <div className="absolute inset-0 flex items-center justify-center">
-                            <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div> */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg-4.jpg" alt="Chair 2" className="w-full h-screen object-cover" />
+                        <img src="/bg-4.jpg" alt="Chair 2" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
-                        {/* <div className="absolute inset-0 flex items-center justify-center">
-                            <h2 className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</h2>
-                        </div> */}
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="relative w-full h-full">
-                        <img src="/bg-5.jpg" alt="Chair 3" className="w-full h-screen object-cover" />
+                        <img src="/bg-5.jpg" alt="Chair 3" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
-                        {/* <div className="absolute inset-0 flex items-center justify-center">
-                            <p className="text-white px-5 text-lg w-[70vw] text-center font-bold">Upgrade your workspace with our modern office furniture, designed for comfort, style, and productivity. Find desks, chairs, and storage solutins perfect for any office.</p>
-                        </div> */}
                     </div>
                 </SwiperSlide>
             </Swiper>
 
             {/* WhatsApp Icon */}
-            <div className="fixed bottom-4 right-6">
+            <div className="fixed bottom-4 right-4 md:right-6 z-40">
                 <a href="https://wa.me/+923175991373" target="_blank" rel="noopener noreferrer">
-                    <img src="/whatsapp.png" alt="whatsapp" className=" w-12 hover:scale-110 transition-all" />
+                    <img src="/whatsapp.png" alt="whatsapp" className="w-10 md:w-12 hover:scale-110 transition-all" />
                 </a>
             </div>
         </div>
