@@ -20,6 +20,7 @@ import ConfirmOrder from "./pages/ConfirmOrder";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import JazzcashPayment from "./components/JazzcashPayment";
+import PaymentMethodSelection from "./pages/PaymentMethodSelection";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ScrollToTop from "./components/ScrollToTop";
@@ -72,6 +73,7 @@ const AppContent = () => {
         <Route path="/shipping" element={<Shipping />} />
         <Route path="/confirmorder" element={<ConfirmOrder />} />
         <Route path="/success" element={<PaymentSuccess />} />
+        <Route path="/payment-method" element={<PaymentMethodSelection />} />
         <Route path="/payment/process" element={<Payment />} />
         <Route path="/jazzcash/payment" element={<JazzcashPayment />} />
 

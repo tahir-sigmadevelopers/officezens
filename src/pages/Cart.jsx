@@ -133,12 +133,9 @@ const CartPage = () => {
                         <span>Rs.{totalPrice > 10000 ? totalPrice + 500 : totalPrice}</span>
                     </div>
                     <button
-                        // onClick={checkOutHandler}
+                        onClick={checkOutHandler}
                         className="w-full bg-black hover:opacity-85 text-white py-2 rounded-lg mb-4">
-                        <a href="https://wa.me/+923175991373" target="_blank" rel="noopener noreferrer">
-                            Go to Checkout
-                        </a>
-
+                        Go to Checkout
                     </button>
                     <button className="w-full border hover:bg-gray-100  border-gray-300 text-gray-700 py-2 rounded-lg">
                         <Link to={"/products"} >  Continue Shopping  </Link>

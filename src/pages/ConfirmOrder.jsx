@@ -35,16 +35,16 @@ const OrderSummary = () => {
             totalPrice,
         };
         sessionStorage.setItem("confirmOrder", JSON.stringify(data));
-        navigate("/payment/process")
+        navigate("/payment-method")
     };
 
 
 
 
     return (
-        <div className="flex flex-col md:flex-row md:space-x-4 p-10 md:py-16">
+        <div className="flex flex-col md:flex-row md:space-x-4 p-10 md:py-24">
             {/* Left Side: Shipping Info and Cart Items */}
-            <div className="md:w-2/3 px-6 space-y-8">
+            <div className="md:w-2/3 px-6 space-y-8 md:py-20 ">
                 {/* Shipping Info */}
                 <div>
                     <h2 className="text-2xl font-bold mb-4">Shipping Info</h2>
@@ -86,7 +86,7 @@ const OrderSummary = () => {
             </div>
 
             {/* Right Side: Order Summary */}
-            <div className="md:w-1/3 px-6 border border-gray-200 p-6 rounded-lg">
+            <div className="md:w-1/3 px-6 border border-gray-200 p-6 rounded-lg md:py-20">
                 <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
                 <div className="space-y-2 text-gray-700">
                     <div className="flex justify-between">
