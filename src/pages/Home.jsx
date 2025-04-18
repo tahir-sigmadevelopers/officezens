@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react'
 import HomeSection from '../components/HomeSection'
 import SuccessHistory from '../components/SuccessHistory'
 import FashionTrends from '../components/FashionTrends'
-import Carousel, { HomeNavbar } from '../components/HomeBanner'
+import Carousel from '../components/HomeBanner'
 import { Skeleton } from '../components/Loader'
 
 // Lazy load product-related components for improved initial load time
@@ -13,7 +13,6 @@ const Home = () => {
     return (
         <>
             {/* <HomeSection /> */}
-            {/* <HomeNavbar /> */}
             <Carousel />
             
             {/* Use Suspense to lazy load product components */}

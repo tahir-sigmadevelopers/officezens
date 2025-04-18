@@ -44,7 +44,7 @@ const CartPage = () => {
     };
 
     return (
-        <div className="p-4 sm:p-6 md:p-8 bg-gray-50 min-h-screen mt-6 md:mt-10">
+        <div className="p-4 py-12 sm:p-6 md:p-8 bg-gray-50 min-h-screen mt-6 md:mt-10">
             {/* Page Title */}
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-1 md:mb-2">Your Shopping</h2>
             <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-8">Home / My Cart</p>
