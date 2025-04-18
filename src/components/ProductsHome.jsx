@@ -1,30 +1,24 @@
 // src/components/Products.jsx
-import React, { useEffect } from 'react';
-import { fetchLatestProducts } from '../redux/reducers/products';
+import React from 'react';
 import { Skeleton } from './Loader';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { addToCart } from '../redux/actions/cartActions';
 import toast from 'react-hot-toast';
+import { useGetLatestProductsQuery } from '../redux/productsApi';
 
 const ProductsHome = () => {
-
-
   const dispatch = useDispatch();
-
-  const { latestItems: latestProducts, latestLoading, latestError } = useSelector((state) => state.products);
-
-
-
-  useEffect(() => {
-    dispatch(fetchLatestProducts());
-  }, [dispatch]);
+  
+  // Use RTK Query instead of Redux dispatch
+  const { data: latestProducts, isLoading: latestLoading, error: latestError } = useGetLatestProductsQuery(undefined, {
+    refetchOnMountOrArgChange: false, // Don't refetch when component remounts if data exists
+  });
 
   const addToCartHandler = (id, quantity) => {
     dispatch(addToCart(id, quantity));
     toast.success("Item Added to Cart");
   };
-
 
   return (
     <section className="px-4 py-8 md:p-10 bg-gray-50">
@@ -38,7 +32,12 @@ const ProductsHome = () => {
             latestProducts && latestProducts?.map(product => (
               <div className="p-3 md:p-4 border rounded-lg shadow" key={product?._id}>
                 <Link to={`/product/${product?._id}`} >
-                  <img src={product?.images && product?.images[0]?.url} alt={product?.name} className="w-full h-40 md:h-48 object-cover rounded-md" />
+                  <img 
+                    src={product?.images && product?.images[0]?.url} 
+                    alt={product?.name} 
+                    className="w-full h-40 md:h-48 object-cover rounded-md"
+                    loading="lazy" // Add lazy loading
+                  />
                 </Link>
                 <h3 className="mt-2 text-base md:text-lg font-semibold mb-1 text-gray-800 truncate">{product?.name}</h3>
 
@@ -49,8 +48,6 @@ const ProductsHome = () => {
               </div>
             ))
           }
-
-
         </div>
       </>
       }

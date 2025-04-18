@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { fetchProductDetails } from '../redux/reducers/product-details';
 import toast from 'react-hot-toast';
-import { Skeleton } from './Loader';
+import { Skeleton } from '../components/Loader';
 import { addToCart } from '../redux/actions/cartActions';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useGetProductDetailsQuery } from '../redux/productsApi';
 
 const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
@@ -16,17 +16,17 @@ const ProductDetails = () => {
     const [hoveredVariation, setHoveredVariation] = useState(null);
     const { id } = useParams();
     const dispatch = useDispatch();
-    const { product, loading, error } = useSelector((state) => state.productDetails);
     const sliderRef = useRef(null);
+    
+    // Use RTK Query instead of Redux
+    const { data: product, isLoading: loading, error } = useGetProductDetailsQuery(id, {
+        refetchOnMountOrArgChange: false,
+    });
 
     // Check if variations have the new structure (objects with name, color, image)
     const hasNewVariationStructure = product?.variations?.length > 0 && 
         typeof product.variations[0] === 'object' && 
         product.variations[0] !== null;
-
-    useEffect(() => {
-        dispatch(fetchProductDetails(id));
-    }, [dispatch, id]);
 
     useEffect(() => {
         if (error) {

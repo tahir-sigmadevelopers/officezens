@@ -1,25 +1,19 @@
 // src/components/LatestTrends.jsx
-import React, { useEffect } from 'react';
+import React from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/actions/cartActions';
-import { fetchOldProducts } from '../redux/reducers/products';
 import { Skeleton } from './Loader';
 import { Link } from 'react-router-dom';
+import { useGetOldProductsQuery } from '../redux/productsApi';
 
 const LatestTrends = () => {
-
-
-
   const dispatch = useDispatch();
 
-  const { oldItems, latestLoading, latestError } = useSelector((state) => state.products);
-
-
-
-  useEffect(() => {
-    dispatch(fetchOldProducts());
-  }, [dispatch]);
+  // Use RTK Query instead of Redux dispatch
+  const { data: oldItems, isLoading: oldLoading, error: oldError } = useGetOldProductsQuery(undefined, {
+    refetchOnMountOrArgChange: false, // Don't refetch when component remounts if data exists
+  });
 
   const addToCartHandler = (id, quantity) => {
     dispatch(addToCart(id, quantity));
@@ -32,16 +26,19 @@ const LatestTrends = () => {
       <p className="mt-2 text-sm md:text-base text-gray-600 text-center px-2">
         Stay updated with our information and engaging blog posts about modern furniture and fashion in the industry.
       </p>
-      {latestLoading ? <Skeleton length={6} /> :
+      {oldLoading ? <Skeleton length={6} /> :
         <>
           <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-
-
             {
               oldItems && oldItems?.map(product => (
                 <div className="p-3 md:p-4 border rounded-lg shadow" key={product?._id}>
                   <Link to={`/product/${product?._id}`}>
-                    <img src={product?.images[0]?.url} alt="Trend" className="w-full h-40 md:h-48 object-cover rounded-md" />
+                    <img 
+                      src={product?.images[0]?.url} 
+                      alt="Trend" 
+                      className="w-full h-40 md:h-48 object-cover rounded-md" 
+                      loading="lazy" // Add lazy loading
+                    />
                   </Link>
                   <h3 className="mt-2 text-base md:text-lg font-semibold mb-1 text-gray-800 truncate">{product?.name}</h3>
                   <div className="text-sm text-gray-600 mb-3 line-clamp-2" dangerouslySetInnerHTML={{ __html: product?.description.slice(0, 100) + (product?.description?.length > 100 ? "..." : "") || '' }} />
@@ -52,9 +49,6 @@ const LatestTrends = () => {
                 </div>
               ))
             }
-  
-
-
           </div>
         </>
       }
