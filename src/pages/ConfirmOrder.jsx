@@ -46,7 +46,7 @@ const OrderSummary = () => {
             {/* Left Side: Shipping Info and Cart Items */}
             <div className="w-full md:w-2/3 px-3 md:px-6 space-y-6 md:space-y-8 mb-6 md:mb-0">
                 {/* Shipping Info */}
-                <div>
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
                     <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">Shipping Info</h2>
                     <div className="text-sm md:text-base text-gray-700">
                         <p><strong>Name:</strong> {user?.name}</p>
@@ -56,28 +56,29 @@ const OrderSummary = () => {
                 </div>
 
                 {/* Cart Items */}
-                <div>
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
                     <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">Your Cart Items:</h2>
                     <div className="space-y-3 md:space-y-4">
                         {
                             cartItems &&
                             cartItems.map((item) => (
-                                <div className="flex flex-col sm:flex-row sm:items-center border-b pb-3" key={item.id}>
-                                    <div className="flex items-center mb-2 sm:mb-0">
+                                <div className="flex flex-col sm:flex-row sm:items-center border-b pb-3 last:border-0" key={item.id}>
+                                    <div className="flex items-start sm:items-center mb-2 sm:mb-0 sm:w-2/3">
                                         <img
                                             src={item.image}
                                             alt={item.name}
-                                            className="w-12 h-12 md:w-16 md:h-16 rounded mr-3 md:mr-4"
+                                            className="w-12 h-12 md:w-16 md:h-16 object-cover rounded mr-3 md:mr-4"
                                         />
-                                        <div className="flex-grow">
-                                            <p className="text-sm md:text-base font-semibold truncate max-w-[180px] sm:max-w-none">
-                                                <Link to={`/product/${item.id}`}>{item.name}</Link>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm md:text-base font-semibold truncate max-w-[180px] sm:max-w-[300px] lg:max-w-[400px]">
+                                                <Link to={`/product/${item.id}`} className="hover:text-yellow-600 transition-colors">{item.name}</Link>
                                             </p>
+                                            <p className="text-xs text-gray-500 mt-1 hidden sm:block">Quantity: {item.quantity}</p>
                                         </div>
                                     </div>
-                                    <span className="text-xs md:text-sm text-gray-600 ml-0 sm:ml-auto"> 
-                                        {item.quantity} X Rs.{item.price} = {" "}
-                                        <b className="text-gray-900">Rs. {item.price * item.quantity}</b>
+                                    <span className="text-xs md:text-sm text-gray-600 ml-0 sm:ml-auto sm:w-1/3 sm:text-right"> 
+                                        {item.quantity} X Rs.{item.price.toFixed(2)} = {" "}
+                                        <b className="text-gray-900">Rs. {(item.price * item.quantity).toFixed(2)}</b>
                                     </span>
                                 </div>
                             ))
@@ -87,7 +88,7 @@ const OrderSummary = () => {
             </div>
 
             {/* Right Side: Order Summary */}
-            <div className="w-full md:w-1/3 px-3 md:px-6 border border-gray-200 p-4 md:p-6 rounded-lg">
+            <div className="w-full md:w-1/3 px-3 md:px-6 border border-gray-200 p-4 md:p-6 rounded-lg bg-white shadow-sm">
                 <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Order Summary</h2>
                 <div className="space-y-2 text-sm md:text-base text-gray-700">
                     <div className="flex justify-between">

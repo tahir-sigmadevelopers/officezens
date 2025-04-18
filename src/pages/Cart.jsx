@@ -63,40 +63,40 @@ const CartPage = () => {
                 {/* Cart Items Section */}
                 {
                     cartItems.length > 0 && (
-                        <div className="lg:col-span-2">
+                        <div className="lg:col-span-2 bg-white shadow-sm rounded-lg p-4 md:p-6">
                             <div className="hidden sm:flex justify-between border-b pb-3 mb-4">
-                                <span className="text-base md:text-lg font-semibold">Items</span>
-                                <span className="text-base md:text-lg font-semibold">Price</span>
+                                <span className="text-base md:text-lg font-semibold w-2/3">Items</span>
+                                <span className="text-base md:text-lg font-semibold w-1/3 text-right">Price</span>
                             </div>
 
                             {/* Individual Cart Item */}
                             {cartItems && cartItems?.map((item, index) => (
-                                <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 border-b">
+                                <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 border-b last:border-0">
                                     {/* Item Info - Mobile Layout */}
-                                    <div className="flex items-start sm:items-center space-x-3 md:space-x-4 mb-3 sm:mb-0">
+                                    <div className="flex items-start sm:items-center space-x-3 md:space-x-4 mb-3 sm:mb-0 sm:w-2/3">
                                         <img
                                             src={item?.image}
                                             alt="Product"
                                             className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
                                         />
-                                        <div>
-                                            <h3 className="text-base sm:text-lg md:text-xl font-semibold truncate max-w-[200px] md:max-w-none">{item.name}</h3>
-                                            <p className="text-xs md:text-sm text-gray-500 hidden md:block">{item.description}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-base sm:text-lg md:text-xl font-semibold truncate max-w-[200px] md:max-w-[300px]">{item.name}</h3>
+                                            <p className="text-xs md:text-sm text-gray-500 hidden md:block line-clamp-2">{item.description}</p>
                                             
                                             {/* Price on mobile */}
                                             <p className="text-sm font-semibold text-gray-700 mt-1 sm:hidden">
-                                                Rs. {item.price} × {item.quantity} = Rs. {item.quantity * item.price}
+                                                Rs. {item.price.toFixed(2)} × {item.quantity} = Rs. {(item.quantity * item.price).toFixed(2)}
                                             </p>
                                         </div>
                                     </div>
                                     
                                     {/* Controls - Mobile & Desktop */}
-                                    <div className="flex items-center justify-between sm:justify-end sm:space-x-4">
+                                    <div className="flex items-center justify-between sm:justify-end sm:space-x-4 sm:w-1/3">
                                         <div className="flex items-center space-x-2 sm:space-x-4">
                                             {/* Delete Button */}
                                             <button 
                                                 onClick={removeFromCartHandler}
-                                                className="p-1 hover:bg-gray-200 rounded-lg"
+                                                className="p-1 hover:bg-gray-200 rounded-lg transition-colors"
                                             >
                                                 <img
                                                     src="/trash.png"
@@ -109,7 +109,7 @@ const CartPage = () => {
                                             <div className="flex items-center border rounded-lg">
                                                 <button 
                                                     onClick={() => decreaseCart(item.id, item.quantity)} 
-                                                    className="px-2 md:px-3 py-1 text-gray-600"
+                                                    className="px-2 md:px-3 py-1 text-gray-600 hover:bg-gray-100 transition-colors"
                                                 >
                                                     -
                                                 </button>
@@ -121,7 +121,7 @@ const CartPage = () => {
                                                 />
                                                 <button 
                                                     onClick={() => increaseCart(item.id, item.quantity, item.stock)}
-                                                    className="px-2 md:px-3 py-1 text-gray-600"
+                                                    className="px-2 md:px-3 py-1 text-gray-600 hover:bg-gray-100 transition-colors"
                                                 >
                                                     +
                                                 </button>
@@ -129,8 +129,8 @@ const CartPage = () => {
                                         </div>
                                         
                                         {/* Price - Desktop only */}
-                                        <span className="hidden sm:block text-base md:text-lg font-semibold text-gray-700">
-                                            Rs. {item.quantity * item.price}
+                                        <span className="hidden sm:block text-base md:text-lg font-semibold text-gray-700 text-right">
+                                            Rs. {(item.quantity * item.price).toFixed(2)}
                                         </span>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@ const CartPage = () => {
 
                 {/* Order Summary Section */}
                 {cartItems.length > 0 && (
-                    <div className="bg-white p-4 md:p-6 shadow rounded-lg mt-4 lg:mt-0">
+                    <div className="bg-white p-4 md:p-6 shadow-sm rounded-lg mt-4 lg:mt-0">
                         <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Order Summary</h3>
                         <div className="space-y-2 md:space-y-3 text-sm md:text-base">
                             <div className="flex justify-between text-gray-600">
