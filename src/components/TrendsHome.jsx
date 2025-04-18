@@ -28,7 +28,7 @@ const LatestTrends = () => {
       </p>
       {oldLoading ? <Skeleton length={6} /> :
         <>
-          <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="mt-6 md:mt-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {
               oldItems && oldItems?.map(product => (
                 <div className="p-3 md:p-4 border rounded-lg shadow" key={product?._id}>
@@ -36,16 +36,16 @@ const LatestTrends = () => {
                     <img 
                       src={product?.images[0]?.url} 
                       alt="Trend" 
-                      className="w-full h-40 md:h-48 object-cover rounded-md" 
+                      className="w-full h-32 md:h-48 object-cover rounded-md" 
                       loading="lazy" // Add lazy loading
                     />
                   </Link>
-                  <h3 className="mt-2 text-base md:text-lg font-semibold mb-1 text-gray-800 truncate">{product?.name}</h3>
-                  <div className="text-sm text-gray-600 mb-3 line-clamp-2" dangerouslySetInnerHTML={{ __html: product?.description.slice(0, 100) + (product?.description?.length > 100 ? "..." : "") || '' }} />
+                  <h3 className="mt-2 text-sm md:text-lg font-semibold mb-1 text-gray-800 truncate">{product?.name}</h3>
+                  <div className="text-xs md:text-sm text-gray-600 mb-2 line-clamp-2" dangerouslySetInnerHTML={{ __html: product?.description.slice(0, 100) + (product?.description?.length > 100 ? "..." : "") || '' }} />
 
-                  <h3 className="mt-1 text-base md:text-lg font-semibold text-gray-800">Rs. {product?.price}</h3>
+                  <h3 className="mt-1 text-sm md:text-lg font-semibold text-gray-800">Rs. {product?.price}</h3>
 
-                  <button onClick={() => addToCartHandler(product?._id, 1)} className="w-full mt-1 px-4 py-2 bg-yellow-500 text-white text-sm md:text-base rounded-full hover:bg-yellow-600 transition-colors">Add to Cart</button>
+                  <button onClick={() => addToCartHandler(product?._id, 1)} className="w-full mt-1 px-3 py-1 md:px-4 md:py-2 bg-yellow-500 text-white text-xs md:text-base rounded-full hover:bg-yellow-600 transition-colors">Add to Cart</button>
                 </div>
               ))
             }

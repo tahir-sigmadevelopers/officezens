@@ -201,19 +201,19 @@ const Products = () => {
                     </div>
 
                     {/* Product Grid */}
-                    <div className="w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <div className="w-full md:w-3/4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         {displayedProducts?.map((product) => (
                             <div key={product?._id} className="bg-white p-3 md:p-4 rounded-lg shadow-md">
                                 <img
                                     src={product?.images.length > 0 && product?.images[0].url}
                                     alt={`${product.name} `}
-                                    className="w-full h-32 sm:h-40 object-cover rounded-md cursor-pointer"
+                                    className="w-full h-28 sm:h-40 object-cover rounded-md cursor-pointer"
                                     onClick={() => navigate(`/product/${product?._id}`)}
                                     loading="lazy" // Add lazy loading for images
                                 />
-                                <h3 className="mt-2 text-sm md:text-base font-semibold text-gray-800 truncate">{product?.name}</h3>
-                                <p className="text-sm md:text-base text-gray-600">Rs. {product?.price}</p>
-                                <button className="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-1 md:py-2 rounded-md text-sm md:text-base" onClick={() => addToCartHandler(product._id, 1)}>Add to Cart</button>
+                                <h3 className="mt-2 text-xs md:text-base font-semibold text-gray-800 truncate">{product?.name}</h3>
+                                <p className="text-xs md:text-base text-gray-600">Rs. {product?.price}</p>
+                                <button className="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-1 md:py-2 rounded-md text-xs md:text-base" onClick={() => addToCartHandler(product._id, 1)}>Add to Cart</button>
                             </div>
                         ))}
                     </div>
