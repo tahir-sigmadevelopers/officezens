@@ -16,7 +16,7 @@ const PaymentSuccess = () => {
 
     return (
         <>
-            <div className="bg-gray-50 h-[85vh]">
+            <div className="bg-gray-50 h-[85vh] py-12">
                 <div className="md:py-12 p-6 md:mx-auto">
                     <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
                         <path fill="currentColor"
