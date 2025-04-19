@@ -30,11 +30,8 @@ const CartPage = () => {
 
     const navigate = useNavigate();
     const checkOutHandler = () => {
-        if (!isAuthenticated) {
-            navigate("/login?redirect=shipping");
-        } else {
-            navigate("/shipping");
-        }
+        // Allow all users to proceed to shipping, regardless of authentication
+        navigate("/shipping");
     };
 
     const removeFromCartHandler = (id) => {

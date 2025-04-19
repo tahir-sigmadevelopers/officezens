@@ -6,10 +6,17 @@ import toast from "react-hot-toast";
 
 const PaymentMethodSelection = () => {
     const [paymentMethod, setPaymentMethod] = useState("cod");
+    const [guestEmail, setGuestEmail] = useState("");
     const orderInfo = JSON.parse(sessionStorage.getItem("confirmOrder")) || {};
     const { shippingInfo, cartItems } = useSelector((state) => state.cart);
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    // Basic email validation
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
     const order = {
         shippingInfo,
@@ -17,10 +24,18 @@ const PaymentMethodSelection = () => {
         itemsPrice: orderInfo.subtotal,
         tax: orderInfo.tax,
         shippingPrice: orderInfo.shippingCharges,
-        total: orderInfo.totalPrice
+        total: orderInfo.totalPrice,
+        user: user?._id,
+        guestInfo: !isAuthenticated ? { email: guestEmail } : undefined
     };
 
     const handleContinue = () => {
+        // If not logged in, validate email
+        if (!isAuthenticated && (!guestEmail || !isValidEmail(guestEmail))) {
+            toast.error("Please enter a valid email address to continue");
+            return;
+        }
+
         if (paymentMethod === "stripe") {
             navigate("/payment/process");
         } else if (paymentMethod === "cod") {
@@ -45,6 +60,24 @@ const PaymentMethodSelection = () => {
         <div className="flex items-center justify-center min-h-[80vh] bg-gray-50 p-3 md:p-4 py-16 md:py-20">
             <div className="w-full max-w-md md:max-w-lg p-4 sm:p-6 md:p-8 bg-white rounded-lg shadow-md md:shadow-lg space-y-4 md:space-y-6">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold md:font-extrabold text-center text-gray-800">Select Payment Method</h2>
+                
+                {/* Show email input for guest checkout */}
+                {!isAuthenticated && (
+                    <div className="mb-4">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                            Email Address (for order confirmation)
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500"
+                            placeholder="your@email.com"
+                            value={guestEmail}
+                            onChange={(e) => setGuestEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                )}
                 
                 <div className="space-y-3 md:space-y-2">
                     <div 

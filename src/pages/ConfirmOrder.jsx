@@ -9,15 +9,18 @@ const OrderSummary = () => {
     const { user } = useSelector((state) => state.auth);
     const { shippingInfo, cartItems } = useSelector((state) => state.cart);
 
-    const address = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.pinCode}, ${shippingInfo.country}`;
+    // Ensure shippingInfo is available
+    if (!shippingInfo || !shippingInfo.address) {
+        navigate("/shipping");
+        return null;
+    }
 
+    const address = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}, ${shippingInfo.pinCode}, ${shippingInfo.country}`;
 
     const subtotal = cartItems.reduce((accumulator, currentItem) => {
         const itemPrice = currentItem.price * currentItem.quantity;
         return accumulator + itemPrice;
     }, 0);
-
-
 
     const shippingCharges = 500;
 
@@ -38,9 +41,6 @@ const OrderSummary = () => {
         navigate("/payment-method")
     };
 
-
-
-
     return (
         <div className="flex flex-col md:flex-row md:space-x-4 p-4 py-16 sm:p-6 md:p-10 mt-4 md:mt-0 md:py-16">
             {/* Left Side: Shipping Info and Cart Items */}
@@ -49,7 +49,7 @@ const OrderSummary = () => {
                 <div className="bg-white p-4 md:p-6 rounded-lg shadow-sm">
                     <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">Shipping Info</h2>
                     <div className="text-sm md:text-base text-gray-700">
-                        <p><strong>Name:</strong> {user?.name}</p>
+                        {user && <p><strong>Name:</strong> {user.name}</p>}
                         <p><strong>Phone:</strong> {shippingInfo.phoneNo}</p>
                         <p><strong>Address:</strong> {address}</p>
                     </div>

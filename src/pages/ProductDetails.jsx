@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Skeleton } from '../components/Loader';
 import { addToCart } from '../redux/actions/cartActions';
@@ -16,6 +16,7 @@ const ProductDetails = () => {
     const [hoveredVariation, setHoveredVariation] = useState(null);
     const { id } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const sliderRef = useRef(null);
     
     // Use RTK Query instead of Redux
@@ -54,6 +55,12 @@ const ProductDetails = () => {
     const addToCartHandler = () => {
         dispatch(addToCart(id, quantity));
         toast.success("Item Added to Cart");
+    };
+
+    // New function to handle Buy Now button click
+    const handleBuyNow = () => {
+        dispatch(addToCart(id, quantity));
+        navigate('/shipping');
     };
 
     const handleVariationClick = (variation) => {
@@ -255,9 +262,13 @@ const ProductDetails = () => {
                                 >
                                     Add To Cart
                                 </button>
-                                <Link to={"/cart"} className="bg-gray-300 hover:bg-gray-200 text-black py-2 px-6 rounded-lg text-center text-sm md:text-base w-full sm:w-auto">
+                                <button
+                                    disabled={product?.stock < 1}
+                                    onClick={handleBuyNow}
+                                    className="bg-gray-300 hover:bg-gray-200 text-black py-2 px-6 rounded-lg text-center text-sm md:text-base w-full sm:w-auto"
+                                >
                                     Buy Now
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>

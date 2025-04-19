@@ -16,7 +16,7 @@ const About = () => {
                             <br /><br className="hidden md:block" />
                             That's why we specialize in providing reliable, high-quality office furniture solutions that elevate your workspace. With years of experience in the industry, we offer a wide range of durable, functional, and stylish furniture designed to meet the diverse needs of businesses, from startups to large corporations. 
                             <br /><br className="hidden md:block" />
-                            Our commitment to excellence ensures that every piece is built to last, delivering both comfort and performance. Whether you're outfitting a home office or transforming a corporate headquarters, we are dedicated to providing powerful solutions that help you create a workspace that works as hard as you do. Trust Office Zens to provide the furniture that supports your success.
+                            Our commitment to excellence ensures that every piece is built to last, delivering both comfort and performance. Whether you're outfitting a home office or transforming a corporate headquarters, we are dedicated to providing powerful solutions that help you create a workspace that works as hard as you do. Trust Relax Chair to provide the furniture that supports your success.
                         </p>
                     </div>
 
