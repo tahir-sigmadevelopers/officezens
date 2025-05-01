@@ -34,15 +34,24 @@ export const updateProduct = createAsyncThunk(
         try {
             const response = await axios.put(`${server}/api/v1/product/${id}`, data, {
                 headers: { "Content-Type": "multipart/form-data" },
+                timeout: 60000
             });
 
             if (response.data.success) {
-                return response.data.message || "Product updated successfully";
+                return {
+                    message: response.data.message || "Product updated successfully",
+                    product: response.data.product
+                };
             } else {
                 return rejectWithValue(response.data.message || "Failed to update product");
             }
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || 'Failed to update product');
+            if (error.code === 'ECONNABORTED') {
+                return rejectWithValue('Request timed out. Image upload may be too large or connection is slow.');
+            }
+            
+            const errorMessage = error.response?.data?.message || 'Failed to update product';
+            return rejectWithValue(errorMessage);
         }
     }
 );
@@ -59,15 +68,27 @@ export const createProduct = createAsyncThunk(
                 productData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
+                    timeout: 60000
                 }
             );
-            console.log("main response hoon", response.data);
-
-            return response.data.product;
+            
+            if (response.data.success) {
+                return {
+                    message: "Product created successfully!",
+                    product: response.data.product
+                };
+            } else {
+                return rejectWithValue(response.data.message || "Failed to create product");
+            }
         } catch (error) {
-            console.log('main error: ' + error);
-
-            return rejectWithValue(error?.response?.data?.message || 'Failed to create product');
+            console.log('main error: ', error);
+            
+            if (error.code === 'ECONNABORTED') {
+                return rejectWithValue('Request timed out. Image upload may be too large or connection is slow.');
+            }
+            
+            const errorMessage = error.response?.data?.message || 'Failed to create product';
+            return rejectWithValue(errorMessage);
         }
     }
 );
@@ -232,11 +253,14 @@ const productsSlice = createSlice({
             .addCase(createProduct.pending, (state) => {
                 state.createLoading = true;
                 state.createError = null;
+                state.message = null;
             })
             .addCase(createProduct.fulfilled, (state, action) => {
                 state.createLoading = false;
-                state.message = action.payload.message; // Assuming the payload has a message
-                state.items.push(action.payload.product); // Add new product to the list
+                state.message = action.payload.message;
+                if (action.payload.product) {
+                    state.items = [...state.items, action.payload.product];
+                }
             })
             .addCase(createProduct.rejected, (state, action) => {
                 state.createLoading = false;
@@ -274,14 +298,17 @@ const productsSlice = createSlice({
             .addCase(updateProduct.pending, (state) => {
                 state.updateLoading = true;
                 state.updateError = null;
+                state.message = null;
             })
             .addCase(updateProduct.fulfilled, (state, action) => {
                 state.updateLoading = false;
-                state.message = action.payload;
-                // Update the product in the items array
-                const updatedProductIndex = state.items.findIndex(item => item._id === action.meta.arg.id);
-                if (updatedProductIndex !== -1) {
-                    state.items[updatedProductIndex] = { ...state.items[updatedProductIndex], ...action.meta.arg.data };
+                state.message = action.payload.message;
+                
+                if (action.payload.product) {
+                    const index = state.items.findIndex(item => item._id === action.payload.product._id);
+                    if (index !== -1) {
+                        state.items[index] = action.payload.product;
+                    }
                 }
             })
             .addCase(updateProduct.rejected, (state, action) => {

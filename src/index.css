@@ -9,23 +9,81 @@
 
 /* ProductDetails.css */
 .slick-arrow {
-  font-size: 24px; /* Adjust size as needed */
-  color: #000; /* Change this to your desired arrow color */
-  z-index: 1; /* Ensure arrows are above the images */
+  font-size: 18px;
+  z-index: 1;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(253, 224, 71, 0.9);
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .slick-prev {
-  left: 10px; /* Adjust position */
+  left: 10px;
 }
 
 .slick-next {
-  right: 10px; /* Adjust position */
+  right: 10px;
 }
 
 .slick-arrow:hover {
-  color: #ff0000; /* Change color on hover */
+  background-color: rgba(251, 191, 36, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+.slick-dots li button:before {
+  color: #FFC107;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #FFC107;
+}
+
+/* Custom scrollbar for product description */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #EAB308;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #D97706;
+}
+
+/* Thumbnail hover effect */
+.product-thumbnail {
+  transition: transform 0.2s ease;
+}
+
+.product-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+/* Product slider */
+.product-slider .slick-slide {
+  transition: all 0.3s ease;
+}
+
+/* Variation hover effect */
+.variation-option {
+  transition: all 0.3s ease;
+}
+
+.variation-option:hover {
+  transform: translateY(-2px);
+}
 
 @keyframes scroll-horizontal {
   0% {

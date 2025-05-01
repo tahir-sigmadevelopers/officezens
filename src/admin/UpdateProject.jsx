@@ -9,6 +9,7 @@ import { Skeleton } from '../components/Loader'
 import { fetchProductDetails } from '../redux/reducers/product-details'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { validateImageFile, getFileValidationErrorMessage, validateBase64Image } from '../utils/imageValidation';
 
 const UpdateProduct = () => {
 
@@ -22,6 +23,7 @@ const UpdateProduct = () => {
     const [price, setPrice] = useState(0);
     const [stock, setStock] = useState(0);
     const [images, setImages] = useState([]);
+    const [imagesModified, setImagesModified] = useState(false);
     const [variations, setVariations] = useState([{ name: "", price: 0, image: null }]);
 
     const navigate = useNavigate();
@@ -30,15 +32,32 @@ const UpdateProduct = () => {
 
     const imagesUploadChange = (e) => {
         const files = Array.from(e.target.files);
+        setImagesModified(true); // Mark images as modified
 
         const newImages = [];
 
         files.forEach((file) => {
+            // Use the validation utility
+            const validation = validateImageFile(file);
+            if (!validation.valid) {
+                toast.error(getFileValidationErrorMessage(file, validation));
+                return;
+            }
+
             const reader = new FileReader();
 
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    newImages.push(reader.result);
+                    // Double-check the base64 size as well
+                    const base64Result = reader.result;
+                    const base64Validation = validateBase64Image(base64Result);
+                    
+                    if (!base64Validation.valid) {
+                        toast.error(`File "${file.name}": ${base64Validation.error}`);
+                        return;
+                    }
+                    
+                    newImages.push(base64Result);
                     setImages(newImages);
                 }
             };
@@ -51,13 +70,30 @@ const UpdateProduct = () => {
         const file = e.target.files[0];
         if (!file) return;
 
+        // Use the validation utility
+        const validation = validateImageFile(file);
+        if (!validation.valid) {
+            toast.error(getFileValidationErrorMessage(file, validation));
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             if (reader.readyState === 2) {
+                // Double-check the base64 size as well
+                const base64Result = reader.result;
+                const base64Validation = validateBase64Image(base64Result);
+                
+                if (!base64Validation.valid) {
+                    toast.error(`File "${file.name}": ${base64Validation.error}`);
+                    return;
+                }
+                
                 const updatedVariations = [...variations];
                 updatedVariations[index] = {
                     ...updatedVariations[index],
-                    image: reader.result // Store base64 string
+                    image: base64Result, // Store base64 string
+                    imageModified: true // Mark this variation image as modified
                 };
                 setVariations(updatedVariations);
             }
@@ -69,6 +105,37 @@ const UpdateProduct = () => {
         e.preventDefault();
 
         try {
+            // Validate required fields
+            if (!name.trim()) {
+                toast.error("Product name is required");
+                return;
+            }
+
+            if (!description.trim()) {
+                toast.error("Product description is required");
+                return;
+            }
+
+            if (!category) {
+                toast.error("Please select a category");
+                return;
+            }
+
+            if (price <= 0) {
+                toast.error("Price must be greater than 0");
+                return;
+            }
+
+            if (stock < 0) {
+                toast.error("Stock cannot be negative");
+                return;
+            }
+
+            if (images.length === 0) {
+                toast.error("Please upload at least one product image");
+                return;
+            }
+
             // Validate and clean variations
             const validVariations = variations.filter(v => {
                 // Handle different variation formats
@@ -103,7 +170,18 @@ const UpdateProduct = () => {
                         return v;
                     }
                 }
-                return v;
+                
+                // Process variation image
+                let imageData = v.image;
+                // If image wasn't modified and is an object with url, keep it
+                if (!v.imageModified && imageData && typeof imageData === 'object' && imageData.url) {
+                    // Keep the existing image object
+                } 
+                
+                return {
+                    ...v,
+                    image: imageData
+                };
             });
             
             if (validVariations.length === 0) {
@@ -111,29 +189,51 @@ const UpdateProduct = () => {
                 return;
             }
 
-        const data = new FormData();
-        data.set("name", name);
-        data.set("description", description);
-        data.set("category", category);
-        data.set("subCategory", subCategory);
-        data.set("price", price);
-        data.set("stock", stock);
+            const data = new FormData();
+            data.set("name", name);
+            data.set("description", description);
+            data.set("category", category);
+            data.set("subCategory", subCategory);
+            data.set("price", price);
+            data.set("stock", stock);
             
             // Convert variations to JSON string to preserve structure
             data.set("variations", JSON.stringify(validVariations));
 
-        images.forEach((image) => {
-                data.append("images", image);
-        });
+            // Only append images if they were modified, otherwise send the existing ones
+            if (imagesModified) {
+                // User uploaded new images, send the new base64 data
+                images.forEach((image) => {
+                    data.append("images", image);
+                });
+            } else {
+                // User didn't change images, send the existing ones as is
+                data.set("images", JSON.stringify(images));
+            }
 
-            const result = await dispatch(updateProduct({ id: params.id, data }));
+            // Show loading toast
+            const loadingToastId = toast.loading("Updating product, please wait...");
+            
+            try {
+                const result = await dispatch(updateProduct({ id: params.id, data }));
+                
+                // Clear loading toast
+                toast.dismiss(loadingToastId);
 
-            if (updateProduct.fulfilled.match(result)) {
-                toast.success(result.payload || "Product updated successfully!");
-            navigate("/admin/products");
-            } else if (updateProduct.rejected.match(result)) {
-                const errorMessage = result.payload || "Failed to update product!";
+                if (updateProduct.fulfilled.match(result)) {
+                    toast.success(result.payload.message || "Product updated successfully!");
+                    navigate("/admin/products");
+                } else if (updateProduct.rejected.match(result)) {
+                    const errorMessage = result.payload || "Failed to update product!";
+                    toast.error(errorMessage);
+                }
+            } catch (error) {
+                // Clear loading toast
+                toast.dismiss(loadingToastId);
+                
+                const errorMessage = error.response?.data?.message || "An error occurred while updating the product";
                 toast.error(errorMessage);
+                console.error("Error in form submission:", error);
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || "An error occurred while updating the product";
@@ -160,6 +260,7 @@ const UpdateProduct = () => {
             setPrice(product.price || 0);
             setStock(product.stock || 0);
             setImages(product.images || []);
+            setImagesModified(false); // Reset modified flag when loading product
             
             // Handle different variation formats
             if (product.variations && product.variations.length > 0) {
@@ -170,7 +271,8 @@ const UpdateProduct = () => {
                         return {
                             name: variation,
                             price: 0,
-                            image: null
+                            image: null,
+                            imageModified: false // Add flag to track if image was modified
                         };
                     }
                     // Case 2: Object format but with stringified JSON in name (partially converted)
@@ -180,14 +282,16 @@ const UpdateProduct = () => {
                             return {
                                 name: parsedVariation.name || "",
                                 price: parsedVariation.price || variation.price || 0,
-                                image: variation.image || null
+                                image: variation.image || null,
+                                imageModified: false // Add flag to track if image was modified
                             };
                         } catch (e) {
                             // If parsing fails, use as is
                             return {
                                 name: variation.name,
                                 price: variation.price || 0,
-                                image: variation.image || null
+                                image: variation.image || null,
+                                imageModified: false // Add flag to track if image was modified
                             };
                         }
                     }
@@ -196,14 +300,15 @@ const UpdateProduct = () => {
                         return {
                             name: variation.name || "",
                             price: variation.price || 0,
-                            image: variation.image || null
+                            image: variation.image || null,
+                            imageModified: false // Add flag to track if image was modified
                         };
                     }
                 });
                 
                 setVariations(processedVariations);
             } else {
-                setVariations([{ name: "", price: 0, image: null }]);
+                setVariations([{ name: "", price: 0, image: null, imageModified: false }]);
             }
         }
     }, [product]);
@@ -369,6 +474,9 @@ const UpdateProduct = () => {
                                                             {variation.image?.url ? 'Change Variation Image' : 'Upload Variation Image'}
                                                         </Button>
                                                     </label>
+                                                    <Typography variant="caption" color="textSecondary" display="block" sx={{ mt: 0.5 }}>
+                                                        * Image less than 500KB. JPG, JPEG, PNG, WEBP only. Square images (1:1) recommended for best display.
+                                                    </Typography>
                                                     {(variation.image?.url || variation.image) && (
                                                         <Box sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
                                                             <img
@@ -409,19 +517,22 @@ const UpdateProduct = () => {
                                 />
                                 <label htmlFor="raised-button-file">
                                     <Button variant="contained" component="span">
-                                            Upload Product Images
+                                        Upload Product Images
                                     </Button>
                                 </label>
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+                                <Typography variant="caption" color="textSecondary" display="block" sx={{ mt: 1 }}>
+                                    * Upload images less than 500KB in size. Allowed formats: JPG, JPEG, PNG, WEBP. Square images (1:1) recommended for best display.
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                                     {images?.map((image, index) => (
-                                        <img
-                                            key={index}
+                                        <img 
+                                            key={index} 
                                             src={image?.url || image}
                                             alt={`Preview ${index + 1}`}
-                                                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                                         />
                                     ))}
-                                    </Box>
+                                </Box>
                             </Grid>
                             <Grid item xs={12}>
                                 <Button

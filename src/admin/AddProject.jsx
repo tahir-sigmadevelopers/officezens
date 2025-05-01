@@ -7,6 +7,7 @@ import Sidebar from './Sidebar'
 import { createProduct, fetchAllCategories } from '../redux/reducers/products'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { validateImageFile, getFileValidationErrorMessage, validateBase64Image } from '../utils/imageValidation'
 
 const AddProduct = () => {
 
@@ -18,7 +19,6 @@ const AddProduct = () => {
     const [price, setprice] = useState(0)
     const [stock, setStock] = useState(0)
     const [images, setImages] = useState([]);
-    const [productCreated, setProductCreated] = useState(false);
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -31,11 +31,27 @@ const AddProduct = () => {
         setImages([]);
 
         files.forEach((file) => {
+            // Use the validation utility
+            const validation = validateImageFile(file);
+            if (!validation.valid) {
+                toast.error(getFileValidationErrorMessage(file, validation));
+                return;
+            }
+
             const reader = new FileReader();
 
             reader.onload = () => {
                 if (reader.readyState === 2) {
-                    setImages((old) => [...old, reader.result]); // Store base64 strings
+                    // Double-check the base64 size as well (sometimes compression can affect size)
+                    const base64Result = reader.result;
+                    const base64Validation = validateBase64Image(base64Result);
+                    
+                    if (!base64Validation.valid) {
+                        toast.error(`File "${file.name}": ${base64Validation.error}`);
+                        return;
+                    }
+                    
+                    setImages((old) => [...old, base64Result]); // Store base64 strings
                 }
             };
 
@@ -47,13 +63,29 @@ const AddProduct = () => {
         const file = e.target.files[0];
         if (!file) return;
 
+        // Use the validation utility
+        const validation = validateImageFile(file);
+        if (!validation.valid) {
+            toast.error(getFileValidationErrorMessage(file, validation));
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             if (reader.readyState === 2) {
+                // Double-check the base64 size as well
+                const base64Result = reader.result;
+                const base64Validation = validateBase64Image(base64Result);
+                
+                if (!base64Validation.valid) {
+                    toast.error(`File "${file.name}": ${base64Validation.error}`);
+                    return;
+                }
+                
                 const updatedVariations = [...variations];
                 updatedVariations[index] = {
                     ...updatedVariations[index],
-                    image: reader.result // Store base64 string
+                    image: base64Result // Store base64 string
                 };
                 setVariations(updatedVariations);
             }
@@ -63,6 +95,37 @@ const AddProduct = () => {
 
     const addProjectSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate required fields
+        if (!name.trim()) {
+            toast.error("Product name is required");
+            return;
+        }
+
+        if (!description.trim()) {
+            toast.error("Product description is required");
+            return;
+        }
+
+        if (!category) {
+            toast.error("Please select a category");
+            return;
+        }
+
+        if (price <= 0) {
+            toast.error("Price must be greater than 0");
+            return;
+        }
+
+        if (stock < 0) {
+            toast.error("Stock cannot be negative");
+            return;
+        }
+
+        if (images.length === 0) {
+            toast.error("Please upload at least one product image");
+            return;
+        }
 
         // Validate variations
         const validVariations = variations.filter(v => v.name.trim() !== "");
@@ -86,76 +149,48 @@ const AddProduct = () => {
             data.append("images", image); // Append base64 strings
         });
 
-        console.log("Submitting product data");
-        const result = await dispatch(createProduct(data));
-        console.log("Product creation result:", result);
-        // Mark that we've attempted to create a product
-        setProductCreated(true);
+        // Show loading toast
+        const loadingToastId = toast.loading("Creating product, please wait...");
+        
+        try {
+            const result = await dispatch(createProduct(data));
+            
+            // Clear loading toast
+            toast.dismiss(loadingToastId);
+            
+            if (createProduct.fulfilled.match(result)) {
+                toast.success(result.payload.message || "Product created successfully!");
+                
+                // Reset form
+                setTitle("");
+                setDescription("");
+                setCategory("");
+                setSubCategory("");
+                setprice(0);
+                setStock(0);
+                setImages([]);
+                setVariations([{ name: "", price: 0, image: null }]);
+                
+                // Navigate to products page with a slight delay to ensure toast is visible
+                setTimeout(() => {
+                    navigate("/admin/products");
+                }, 1000);
+            } else if (createProduct.rejected.match(result)) {
+                const errorMessage = result.payload || "Failed to create product";
+                toast.error(errorMessage);
+            }
+        } catch (error) {
+            // Clear loading toast
+            toast.dismiss(loadingToastId);
+            toast.error("An unexpected error occurred");
+            console.error("Error in form submission:", error);
+        }
     };
 
     // Fetch categories on component mount
     useEffect(() => {
         dispatch(fetchAllCategories());
     }, [dispatch]);
-
-    // Handle product creation response
-    useEffect(() => {
-    
-        
-        // Only run this if we've attempted to create a product
-        if (productCreated) {
-            if (!createLoading) {
-                if (message) {
-                    console.log("Success condition met, navigating");
-                    toast.success(message || "Product created successfully!");
-                    
-                    // Reset form
-                    setTitle("");
-                    setDescription("");
-                    setCategory("");
-                    setSubCategory("");
-                    setprice(0);
-                    setStock(0);
-                    setImages([]);
-                    setVariations([{ name: "", price: 0, image: null }]);
-                    
-                    // Reset product created flag
-                    setProductCreated(false);
-                    
-                    // Navigate to products page with a slight delay to ensure toast is visible
-                    setTimeout(() => {
-                        navigate("/admin/products");
-                    }, 1000);
-                } else if (createError) {
-                    console.log("Error condition met");
-                    toast.error(createError || "Error creating product");
-                    setProductCreated(false);
-                } else {
-                    // No message and no error but loading is done
-                    if (!message && !createError) {
-                        console.log("No message but product likely created");
-                        toast.success("Product likely created successfully!");
-                        setProductCreated(false);
-                        
-                        // Reset form
-                        setTitle("");
-                        setDescription("");
-                        setCategory("");
-                        setSubCategory("");
-                        setprice(0);
-                        setStock(0);
-                        setImages([]);
-                        setVariations([{ name: "", price: 0, image: null }]);
-                        
-                        // Navigate to products page with a slight delay
-                        setTimeout(() => {
-                            navigate("/admin/products");
-                        }, 1000);
-                    }
-                }
-            }
-        }
-    }, [message, createError, createLoading, navigate, productCreated]);
 
     const handleVariationChange = (index, field, value) => {
         const updatedVariations = [...variations];
@@ -313,6 +348,9 @@ const AddProduct = () => {
                                                         Upload Variation Image
                                                     </Button>
                                                 </label>
+                                                <Typography variant="caption" color="textSecondary" display="block" sx={{ mt: 0.5 }}>
+                                                    * Image less than 500KB. JPG, JPEG, PNG, WEBP only. Square images (1:1) recommended for best display.
+                                                </Typography>
                                                 {variation.image && (
                                                     <Box sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
                                                         <img
@@ -356,11 +394,14 @@ const AddProduct = () => {
                                         Upload Product Images
                                     </Button>
                                 </label>
+                                <Typography variant="caption" color="textSecondary" display="block" sx={{ mt: 1 }}>
+                                    * Upload images less than 500KB in size. Allowed formats: JPG, JPEG, PNG, WEBP. Square images (1:1) recommended for best display.
+                                </Typography>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                                     {images.map((image, index) => (
-                                        <img
-                                            key={index}
-                                            src={image}
+                                        <img 
+                                            key={index} 
+                                            src={image} 
                                             alt={`Preview ${index + 1}`}
                                             style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                                         />
