@@ -163,7 +163,7 @@ export const HomeNavbar = () => {
 
 const Carousel = () => {
     return (
-        <div className="mt-[-40px] md:mt-8">
+        <div className="mt-14 md:mt-16">
             <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={0}
