@@ -153,7 +153,7 @@ const CartPage = () => {
                                             </button>
                                         </div>
                                     </div>
-
+                                    
                                     {/* Cart Item List */}
                                     {cartItems.map((item, index) => (
                                         <div key={index} className="p-4 border-b last:border-0  bg-white">
@@ -202,7 +202,12 @@ const CartPage = () => {
 
                                                             <div className="text-right">
                                                                 <div className="font-medium text-yellow-600">Rs. {item.price.toFixed(0)}</div>
-                                                                <div className="text-xs text-gray-500 line-through">Rs. {Math.round(item.price * 1.3)}</div>
+                                                                <div className="flex items-center justify-end space-x-2">
+                                                                    <span className="text-xs text-gray-500 line-through">Rs. {Math.round(item.price * 1.3)}</span>
+                                                                    <span className="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
+                                                                        -30%
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -210,24 +215,24 @@ const CartPage = () => {
                                                         {/* Quantity and Actions */}
                                                         <div className="flex justify-between items-end mt-2 pt-2">
                                                             <div className="flex items-center border rounded-md">
-                                                                <button
-                                                                    onClick={() => decreaseCart(item.id, item.quantity)}
+                                                <button 
+                                                    onClick={() => decreaseCart(item.id, item.quantity)} 
                                                                     className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                                                >
+                                                >
                                                                     −
-                                                                </button>
-                                                                <input
+                                                </button>
+                                                <input
                                                                     type="text"
-                                                                    value={item.quantity}
-                                                                    readOnly
+                                                    value={item.quantity}
+                                                    readOnly
                                                                     className="w-10 text-center border-x py-1 text-sm"
-                                                                />
-                                                                <button
-                                                                    onClick={() => increaseCart(item.id, item.quantity, item.stock)}
+                                                />
+                                                <button 
+                                                    onClick={() => increaseCart(item.id, item.quantity, item.stock)}
                                                                     className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                                                >
-                                                                    +
-                                                                </button>
+                                                >
+                                                    +
+                                                </button>
                                                             </div>
 
                                                             <div>
@@ -265,22 +270,22 @@ const CartPage = () => {
                                             <span className={totalPrice > 10000 ? "text-gray-600" : "text-green-600"}>
                                                 {totalPrice > 10000 ? `Rs. 500` : "Free"}
                                             </span>
-                                        </div>
-
+                            </div>
+                            
                                         <div className="pt-2 border-t mt-2">
                                             <div className="flex justify-between font-medium">
-                                                <span>Total</span>
+                                <span>Total</span>
                                                 <span className="text-yellow-600">Rs. {(totalPrice > 10000 ? totalPrice + 500 : totalPrice).toFixed(0)}</span>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={checkOutHandler}
+                            </div>
+                        </div>
+                        
+                            <button
+                                onClick={checkOutHandler}
                                         className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-medium mt-6 transition-colors"
-                                    >
+                            >
                                         PROCEED TO CHECKOUT ({cartItems.length})
-                                    </button>
+                            </button>
 
                                     <div className="mt-6 flex flex-col space-y-2">
                                         <div className="flex items-center text-xs text-gray-500">

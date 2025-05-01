@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSearchProductsQuery, useGetCategoriesQuery } from '../redux/productsApi';
 import toast from 'react-hot-toast';
 import { Skeleton } from '../components/Loader';
-import { addToCart } from '../redux/actions/cartActions';
 
 const Products = () => {
     const navigate = useNavigate();
@@ -48,10 +47,6 @@ const Products = () => {
     // Update products based on the search results
     const displayedProducts = searchedData?.products;
 
-    const addToCartHandler = (id, quantity) => {
-        dispatch(addToCart(id, quantity));
-        toast.success("Item Added to Cart");
-    };
 
     const handleCategoryChange = (selectedCategory) => {
         setCategory(selectedCategory);
@@ -212,8 +207,13 @@ const Products = () => {
                                     loading="lazy" // Add lazy loading for images
                                 />
                                 <h3 className="mt-2 text-xs md:text-base font-semibold text-gray-800 truncate">{product?.name}</h3>
-                                <p className="text-xs md:text-base text-gray-600">Rs. {product?.price}</p>
-                                <button className="mt-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-1 md:py-2 rounded-md text-xs md:text-base" onClick={() => addToCartHandler(product._id, 1)}>Add to Cart</button>
+                                <div className="flex items-center justify-between">
+                                    <p className="text-xs md:text-base font-medium text-yellow-600">Rs. {product?.price}</p>
+                                    <div className="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
+                                        -30%
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-500 line-through">Rs. {Math.round(product?.price * 1.3)}</p>
                             </div>
                         ))}
                     </div>

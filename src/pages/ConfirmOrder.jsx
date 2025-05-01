@@ -45,7 +45,7 @@ const OrderSummary = () => {
     };
 
     return (
-        <div className="flex flex-col md:flex-row md:space-x-4 p-4 py-16 sm:p-6 md:p-10 mt-12 sm:mt-16 md:mt-0 md:py-16">
+        <div className="flex flex-col md:flex-row md:space-x-4 p-4 py-8 sm:p-6 md:p-10 mt-12 sm:mt-16 md:mt-0 md:py-16">
             {/* Left Side: Shipping Info and Cart Items */}
             <div className="w-full md:w-2/3 px-3 md:px-6 space-y-6 md:space-y-8 mb-6 md:mb-0">
                 {/* Shipping Info */}
@@ -127,6 +127,14 @@ const OrderSummary = () => {
                                         <span className="text-sm md:text-base font-medium text-gray-900">
                                             Rs. {(item.price * item.quantity).toFixed(0)}
                                         </span>
+                                        <div className="flex items-center space-x-2 mt-1">
+                                            <span className="text-xs text-gray-500 line-through">
+                                                Rs. {Math.round(item.price * 1.3 * item.quantity)}
+                                            </span>
+                                            <span className="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
+                                                -30%
+                                            </span>
+                                        </div>
                                         <span className="text-xs text-gray-500 mt-1">
                                             {item.quantity} × Rs. {item.price.toFixed(0)}
                                         </span>
