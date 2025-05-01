@@ -3,7 +3,7 @@
 import axios from "axios";
 import { server } from "../constants";
 
-export const addToCart = (id, quantity) => async (dispatch, getState) => {
+export const addToCart = (id, quantity, selectedVariation = null) => async (dispatch, getState) => {
   try {
     const { data } = await axios.get(`${server}/api/v1/product/${id}`);
 
@@ -13,9 +13,14 @@ export const addToCart = (id, quantity) => async (dispatch, getState) => {
         id: data.product._id,
         name: data.product.name,
         stock: data.product.stock,
-        price: data.product.price,
-        image: data.product.images[0].url,
+        price: selectedVariation?.price || data.product.price,
+        image: selectedVariation?.image?.url || data.product.images[0].url,
         quantity,
+        variation: selectedVariation ? {
+          name: selectedVariation.name,
+          color: selectedVariation.color || null,
+          image: selectedVariation.image || null
+        } : null
       },
     });
 
@@ -30,11 +35,9 @@ export const addToCart = (id, quantity) => async (dispatch, getState) => {
 
 export const removeFromCart = (id) => async (dispatch, getState) => {
   try {
-    const { data } = await axios.get(`${server}/product/${id}`);
-
     dispatch({
       type: "removeFromCart",
-      payload: data.product._id,
+      payload: id,
     });
 
     localStorage.setItem(
@@ -44,7 +47,7 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: "removeFromCartFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Failed to remove item",
     });
   }
 };
