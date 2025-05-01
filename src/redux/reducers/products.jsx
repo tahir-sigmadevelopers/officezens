@@ -32,10 +32,12 @@ export const updateProduct = createAsyncThunk(
     'products/updateProduct',
     async ({ id, data }, { rejectWithValue }) => {
         try {
+            console.log("data", data);
             const response = await axios.put(`${server}/api/v1/product/${id}`, data, {
                 headers: { "Content-Type": "multipart/form-data" },
                 timeout: 60000
             });
+            console.log("response", response);
 
             if (response.data.success) {
                 return {

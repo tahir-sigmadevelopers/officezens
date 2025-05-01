@@ -160,21 +160,21 @@ const AddProduct = () => {
             
             if (createProduct.fulfilled.match(result)) {
                 toast.success(result.payload.message || "Product created successfully!");
-                
-                // Reset form
-                setTitle("");
-                setDescription("");
-                setCategory("");
-                setSubCategory("");
-                setprice(0);
-                setStock(0);
-                setImages([]);
-                setVariations([{ name: "", price: 0, image: null }]);
-                
-                // Navigate to products page with a slight delay to ensure toast is visible
-                setTimeout(() => {
-                    navigate("/admin/products");
-                }, 1000);
+                    
+                    // Reset form
+                    setTitle("");
+                    setDescription("");
+                    setCategory("");
+                    setSubCategory("");
+                    setprice(0);
+                    setStock(0);
+                    setImages([]);
+                    setVariations([{ name: "", price: 0, image: null }]);
+                    
+                    // Navigate to products page with a slight delay to ensure toast is visible
+                    setTimeout(() => {
+                        navigate("/admin/products");
+                    }, 1000);
             } else if (createProduct.rejected.match(result)) {
                 const errorMessage = result.payload || "Failed to create product";
                 toast.error(errorMessage);
@@ -225,6 +225,9 @@ const AddProduct = () => {
                 <Container maxWidth="md">
                     <Typography variant="h4" gutterBottom>
                         Add Product
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: -1, mb: 2 }}>
+                        Note: It may take up to 1 minute for the newly created product to appear in listings.
                     </Typography>
                     <form onSubmit={addProjectSubmit}>
                         <Grid container spacing={3}>
@@ -399,9 +402,9 @@ const AddProduct = () => {
                                 </Typography>
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                                     {images.map((image, index) => (
-                                        <img 
-                                            key={index} 
-                                            src={image} 
+                                        <img
+                                            key={index}
+                                            src={image}
                                             alt={`Preview ${index + 1}`}
                                             style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                                         />

@@ -106,7 +106,7 @@ const CartPage = () => {
     };
 
     return (
-        <div className="p-4 py-8 sm:p-6 md:p-8 bg-gray-50 min-h-screen mt-6 md:mt-10">
+        <div className="p-4 py-8 sm:p-6 md:p-8 pt-16 bg-gray-50 min-h-screen mt-6 md:mt-10">
             <div className="max-w-7xl mx-auto">
                 {cartItems.length < 1 ? (
                     <div className="flex flex-col items-center justify-center py-16 bg-white rounded-lg shadow-sm">
@@ -153,102 +153,83 @@ const CartPage = () => {
                                             </button>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Cart Item List */}
-                                    {cartItems.map((item, index) => (
-                                        <div key={index} className="p-4 border-b last:border-0  bg-white">
-                                            <div className="flex items-start">
+                                    {/* Cart Items */}
+                                    {cartItems.map((item) => (
+                                        <div
+                                            key={item.id || item._id}
+                                            className="flex flex-col md:flex-row items-start md:items-center justify-between border-b p-4 gap-4"
+                                        >
+                                            {/* Checkbox */}
+                                            <div className="flex items-center mr-2">
                                                 <input
                                                     type="checkbox"
-                                                    className="h-4 w-4 mt-1 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500 mr-3"
+                                                    className="h-4 w-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
                                                     checked={selectedItems.includes(item.id)}
                                                     onChange={() => handleSelectItem(item.id)}
                                                 />
-
-                                                <div className="flex flex-1 space-x-4">
-                                                    {/* Product Image */}
-                                                    <div className="relative">
-                                                      <Link to={`/product/${item.id}`}>
-                                                        <img
-                                                            src={item.image}
-                                                            alt={item.name}
-                                                            className="w-20 h-20 object-cover rounded-md border border-gray-200"
-                                                        />
-                                                        </Link>
-                                                        {item.variation && (
-                                                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs">
-                                                                V
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {/* Product Details */}
-                                                    <div className="flex-1 min-w-0 flex flex-col">
-                                                        <Link to={`/product/${item.id}`}>
-                                                        <div className="flex justify-between">
-                                                            <div>
-                                                                <h3 className="font-medium text-gray-900 truncate">{item.name}</h3>
-                                                                {item.variation && (
-                                                                    <div className="mt-1 text-xs text-gray-500"><span className='font-bold'>Variation:</span>
-                                                                        {item.variation.name}
-                                                                        {item.variation.color && (
-                                                                            <span className="ml-1 w-2 h-2 rounded-full inline-block align-middle"
-                                                                                style={{ backgroundColor: item.variation.color }}></span>
-                                                                        )}
-                                                                    </div>
-                                                                )}
-
-                                                            </div>
-
-                                                            <div className="text-right">
-                                                                <div className="font-medium text-yellow-600">Rs. {item.price.toFixed(0)}</div>
-                                                                <div className="flex items-center justify-end space-x-2">
-                                                                    <span className="text-xs text-gray-500 line-through">Rs. {Math.round(item.price * 1.3)}</span>
-                                                                    <span className="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">
-                                                                        -30%
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        </Link>
-                                                        {/* Quantity and Actions */}
-                                                        <div className="flex justify-between items-end mt-2 pt-2">
-                                                            <div className="flex items-center border rounded-md">
-                                                <button 
-                                                    onClick={() => decreaseCart(item.id, item.quantity)} 
-                                                                    className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                                >
-                                                                    −
-                                                </button>
-                                                <input
-                                                                    type="text"
-                                                    value={item.quantity}
-                                                    readOnly
-                                                                    className="w-10 text-center border-x py-1 text-sm"
+                                            </div>
+                                            
+                                            {/* Product Image */}
+                                            <div className="flex-shrink-0">
+                                                <img
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    className="w-24 h-24 object-contain border rounded-md"
                                                 />
-                                                <button 
-                                                    onClick={() => increaseCart(item.id, item.quantity, item.stock)}
-                                                                    className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                                >
-                                                    +
-                                                </button>
-                                                            </div>
+                                            </div>
 
-                                                            <div>
-                                                                <button
-                                                                    onClick={() => removeFromCartHandler(item.id)}
-                                                                    className="text-gray-400 hover:text-red-500"
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                                    </svg>
-                                                                </button>
-                                                            </div>
-                                                        </div>
+                                            {/* Info Section */}
+                                            <div className="flex-1 w-full">
+                                                <p className="text-base font-medium text-gray-800">{item.name}</p>
+                                                <div className="flex items-center mt-1">
+                                                    <p className="text-sm font-medium text-yellow-600">Rs. {item.price}</p>
+                                                    <div className="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded">
+                                                        -30%
                                                     </div>
                                                 </div>
+                                                <p className="text-xs text-gray-500 line-through">Rs. {Math.round(item.price * 1.3)}</p>
+                                                
+                                                {item.variation && (
+                                                    <p className="text-xs text-gray-600 mt-1">
+                                                        Variation: {typeof item.variation === 'string' ? item.variation : item.variation.name}
+                                                    </p>
+                                                )}
+                                                
+                                                {/* Quantity Controls */}
+                                                <div className="flex items-center mt-3">
+                                                    <button 
+                                                        onClick={() => decreaseCart(item.id || item._id, item.quantity)}
+                                                        className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l-md bg-gray-50 hover:bg-gray-100"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                                        </svg>
+                                                    </button>
+                                                    <div className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 bg-white">
+                                                        {item.quantity}
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => increaseCart(item.id || item._id, item.quantity, item.stock)}
+                                                        className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
+
+                                            {/* Delete Button */}
+                                            <button
+                                                onClick={() => removeFromCartHandler(item.id || item._id)}
+                                                className="text-red-500 hover:text-red-700 self-end md:self-auto"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
@@ -270,22 +251,22 @@ const CartPage = () => {
                                             <span className={totalPrice > 10000 ? "text-gray-600" : "text-green-600"}>
                                                 {totalPrice > 10000 ? `Rs. 500` : "Free"}
                                             </span>
-                            </div>
-                            
+                                        </div>
+
                                         <div className="pt-2 border-t mt-2">
                                             <div className="flex justify-between font-medium">
-                                <span>Total</span>
+                                                <span>Total</span>
                                                 <span className="text-yellow-600">Rs. {(totalPrice > 10000 ? totalPrice + 500 : totalPrice).toFixed(0)}</span>
                                             </div>
-                            </div>
-                        </div>
-                        
-                            <button
-                                onClick={checkOutHandler}
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={checkOutHandler}
                                         className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-medium mt-6 transition-colors"
-                            >
+                                    >
                                         PROCEED TO CHECKOUT ({cartItems.length})
-                            </button>
+                                    </button>
 
                                     <div className="mt-6 flex flex-col space-y-2">
                                         <div className="flex items-center text-xs text-gray-500">
