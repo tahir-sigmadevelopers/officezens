@@ -153,7 +153,7 @@ const CartPage = () => {
                                             </button>
                                         </div>
                                     </div>
-
+                                    
                                     {/* Cart Item List */}
                                     {/* Cart Items */}
                                     {cartItems.map((item) => (
@@ -214,31 +214,31 @@ const CartPage = () => {
                                                         )}
                                                     </div>
                                                 )}
-                                                
-                                                {/* Quantity Controls */}
+                                            
+                                            {/* Quantity Controls */}
                                                 <div className="flex items-center mt-3">
-                                                    <button 
+                                                <button 
                                                         onClick={() => decreaseCart(item.id || item._id, item.quantity)}
                                                         className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l-md bg-gray-50 hover:bg-gray-100"
-                                                    >
+                                                >
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                                                         </svg>
-                                                    </button>
+                                                </button>
                                                     <div className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 bg-white">
                                                         {item.quantity}
                                                     </div>
-                                                    <button 
+                                                <button 
                                                         onClick={() => increaseCart(item.id || item._id, item.quantity, item.stock)}
                                                         className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100"
-                                                    >
+                                                >
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                                         </svg>
-                                                    </button>
-                                                </div>
+                                                </button>
                                             </div>
-
+                                        </div>
+                                        
                                             {/* Delete Button */}
                                             <button
                                                 onClick={() => removeFromCartHandler(item.id || item._id)}
@@ -248,9 +248,9 @@ const CartPage = () => {
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </button>
-                                        </div>
-                                    ))}
                                 </div>
+                            ))}
+                        </div>
                             </div>
 
                             {/* Order Summary */}
@@ -269,22 +269,22 @@ const CartPage = () => {
                                             <span className={totalPrice > 10000 ? "text-gray-600" : "text-green-600"}>
                                                 {totalPrice > 10000 ? `Rs. 500` : "Free"}
                                             </span>
-                                        </div>
-
+                            </div>
+                            
                                         <div className="pt-2 border-t mt-2">
                                             <div className="flex justify-between font-medium">
-                                                <span>Total</span>
+                                <span>Total</span>
                                                 <span className="text-yellow-600">Rs. {(totalPrice > 10000 ? totalPrice + 500 : totalPrice).toFixed(0)}</span>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={checkOutHandler}
+                            </div>
+                        </div>
+                        
+                            <button
+                                onClick={checkOutHandler}
                                         className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-md font-medium mt-6 transition-colors"
-                                    >
+                            >
                                         PROCEED TO CHECKOUT ({cartItems.length})
-                                    </button>
+                            </button>
 
                                     <div className="mt-6 flex flex-col space-y-2">
                                         <div className="flex items-center text-xs text-gray-500">

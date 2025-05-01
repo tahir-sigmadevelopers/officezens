@@ -49,7 +49,10 @@ const Navbar = () => {
     <nav className="bg-white shadow-md">
       {/* Mobile Nav */}
       <div className="md:hidden flex items-center justify-between p-4">
-        <div className="text-xl font-bold">Relax Chair</div>
+        <div className="flex items-center">
+          <img src="/logo.jpg" alt="Relax Chair Logo" className="h-8 w-8 mr-2 rounded-full object-cover" />
+          <div className="text-xl font-bold">HelloRelax Chair</div>
+        </div>
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="text-black p-2"
@@ -104,7 +107,10 @@ const Navbar = () => {
 
       {/* Desktop Nav */}
       <div className="hidden md:flex md:items-center md:justify-between md:p-6">
-        <div className="text-2xl font-bold">Relax Chair</div>
+        <div className="flex items-center">
+          <img src="/logo.jpg" alt="Relax Chair Logo" className="h-10 w-10 mr-3 rounded-full object-cover" />
+          <div className="text-2xl font-bold">Hi Relax Chair</div>
+        </div>
         <ul className="flex space-x-8 text-black font-semibold">
           <Link to={"/"}>Home</Link>
           <Link to={"/products"}>Shop</Link>

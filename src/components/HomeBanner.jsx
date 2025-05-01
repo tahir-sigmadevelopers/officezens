@@ -55,7 +55,10 @@ export const HomeNavbar = () => {
         <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90">
             {/* Mobile Menu Button */}
             <div className="md:hidden flex justify-between items-center py-2 px-4">
-                <Link to="/" className="text-white text-xl font-bold">Relax Chair</Link>
+                <Link to="/" className="flex items-center">
+                    <img src="/logo.jpg" alt="Relax Chair Logo" className="h-8 w-8 mr-2 rounded-full object-cover" />
+                    <span className="text-white text-xl font-bold">Relax Chair</span>
+                </Link>
                 <div className="flex items-center space-x-3">
                     {/* Cart Icon with Badge */}
                     <Link to="/cart" className="text-white relative">
@@ -120,11 +123,14 @@ export const HomeNavbar = () => {
                 </div>
                 
                 <div className="overflow-hidden py-2 rounded-sm ml-2">
-                    <div className="overflow-hidden rounded-sm">
-                        <div className="scroll-text text-white font-semibold">
-                            <p className="uppercase">Pakistan's largest office furniture brand</p>
-                            <p className="uppercase">Within Lahore provide the same day delivery</p>
-                            <p className="uppercase">Other cities delivery time will be 4 to 5 working days</p>
+                    <div className="flex items-center">
+                        <img src="/logo.jpg" alt="Relax Chair Logo" className="h-8 w-8 mr-3 rounded-full object-cover hidden md:block" />
+                        <div className="overflow-hidden rounded-sm">
+                            <div className="scroll-text text-white font-semibold">
+                                <p className="uppercase">Pakistan's largest office furniture brand</p>
+                                <p className="uppercase">Within Lahore provide the same day delivery</p>
+                                <p className="uppercase">Other cities delivery time will be 4 to 5 working days</p>
+                            </div>
                         </div>
                     </div>
                 </div>

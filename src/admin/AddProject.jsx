@@ -153,7 +153,7 @@ const AddProduct = () => {
         const loadingToastId = toast.loading("Creating product, please wait...");
         
         try {
-            const result = await dispatch(createProduct(data));
+        const result = await dispatch(createProduct(data));
             
             // Clear loading toast
             toast.dismiss(loadingToastId);
