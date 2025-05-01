@@ -192,9 +192,27 @@ const CartPage = () => {
                                                 <p className="text-xs text-gray-500 line-through">Rs. {Math.round(item.price * 1.3)}</p>
                                                 
                                                 {item.variation && (
-                                                    <p className="text-xs text-gray-600 mt-1">
-                                                        Variation: {typeof item.variation === 'string' ? item.variation : item.variation.name}
-                                                    </p>
+                                                    <div className="mt-2 bg-gray-50 px-2 py-1 rounded border-l-2 border-yellow-400">
+                                                        <p className="text-xs font-medium text-gray-700">
+                                                            Variation: {typeof item.variation === 'string' 
+                                                                ? item.variation 
+                                                                : (item.variation.name || 'Unknown')}
+                                                        </p>
+                                                        {item.variation && typeof item.variation !== 'string' && item.variation.price > 0 && (
+                                                            <p className="text-xs text-gray-600">
+                                                                Extra cost: Rs. {item.variation.price}
+                                                            </p>
+                                                        )}
+                                                        {item.variation && typeof item.variation !== 'string' && item.variation.color && (
+                                                            <div className="flex items-center mt-1">
+                                                                <span className="text-xs text-gray-600 mr-1">Color:</span>
+                                                                <span 
+                                                                    className="inline-block w-3 h-3 rounded-full border border-gray-300"
+                                                                    style={{ backgroundColor: item.variation.color }}
+                                                                ></span>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 )}
                                                 
                                                 {/* Quantity Controls */}
