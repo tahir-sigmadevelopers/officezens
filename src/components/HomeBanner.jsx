@@ -124,7 +124,7 @@ export const HomeNavbar = () => {
                 
                 <div className="overflow-hidden py-2 rounded-sm ml-2">
                     <div className="flex items-center">
-                        <img src="/logo.jpg" alt="Relax Chair Logo" className="h-8 w-8 mr-3 rounded-full object-cover hidden md:block" />
+                       
                         <div className="overflow-hidden rounded-sm">
                             <div className="scroll-text text-white font-semibold">
                                 <p className="uppercase">Pakistan's largest office furniture brand</p>
