@@ -52,7 +52,7 @@ export const HomeNavbar = () => {
     };
 
     return (
-        <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90 mb-8">
+        <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-gray-900 to-gray-800 bg-opacity-90">
             {/* Mobile Menu Button */}
             <div className="md:hidden flex justify-between items-center py-2 px-4">
                 <Link to="/" className="text-white text-xl font-bold">Relax Chair</Link>
@@ -163,7 +163,7 @@ export const HomeNavbar = () => {
 
 const Carousel = () => {
     return (
-        <div className="mt-16 md:mt-8">
+        <div className="mt-[-40px] md:mt-8">
             <Swiper
                 modules={[Navigation, Pagination, Autoplay]}
                 spaceBetween={0}
@@ -174,32 +174,32 @@ const Carousel = () => {
                 loop={true}
             >
                 <SwiperSlide>
-                    <div className="relative w-full h-full">
-                        <img src="/bg-1.jpg" alt="Chair 3" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
+                    <div className="relative w-full">
+                        <img src="/bg-1.jpg" alt="Chair 3" className="w-full object-cover h-auto md:h-[80vh] lg:h-screen" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="relative w-full h-full">
-                        <img src="/bg-2.jpg" alt="Chair 3" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
+                    <div className="relative w-full">
+                        <img src="/bg-2.jpg" alt="Chair 3" className="w-full object-cover h-auto md:h-[80vh] lg:h-screen" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="relative w-full h-full">
-                        <img src="/bg-3.jpg" alt="Chair 1" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
+                    <div className="relative w-full">
+                        <img src="/bg-3.jpg" alt="Chair 1" className="w-full object-cover h-auto md:h-[80vh] lg:h-screen" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="relative w-full h-full">
-                        <img src="/bg-4.jpg" alt="Chair 2" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
+                    <div className="relative w-full">
+                        <img src="/bg-4.jpg" alt="Chair 2" className="w-full object-cover h-auto md:h-[80vh] lg:h-screen" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="relative w-full h-full">
-                        <img src="/bg-5.jpg" alt="Chair 3" className="w-full h-[50vh] md:h-[80vh] lg:h-screen object-cover" />
+                    <div className="relative w-full">
+                        <img src="/bg-5.jpg" alt="Chair 3" className="w-full object-cover h-auto md:h-[80vh] lg:h-screen" />
                         <div className="absolute inset-0 bg-black opacity-10"></div>
                     </div>
                 </SwiperSlide>
