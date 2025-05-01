@@ -202,7 +202,7 @@ const Products = () => {
                                 <img
                                     src={product?.images.length > 0 && product?.images[0].url}
                                     alt={`${product.name} `}
-                                    className="w-full h-28 sm:h-40 object-cover rounded-md cursor-pointer"
+                                    className="w-full h-32 sm:h-44 object-contain bg-white rounded-md cursor-pointer"
                                     onClick={() => navigate(`/product/${product?._id}`)}
                                     loading="lazy" // Add lazy loading for images
                                 />

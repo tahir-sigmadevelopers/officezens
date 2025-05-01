@@ -25,7 +25,7 @@ const ProductsHome = () => {
                   <img 
                     src={product?.images && product?.images[0]?.url} 
                     alt={product?.name} 
-                    className="w-full h-32 md:h-48 object-cover rounded-md"
+                    className="w-full h-40 md:h-60 object-contain bg-white rounded-md"
                     loading="lazy" // Add lazy loading
                   />
                   <h3 className="mt-2 text-sm md:text-lg font-semibold mb-1 text-gray-800 truncate">{product?.name}</h3>
