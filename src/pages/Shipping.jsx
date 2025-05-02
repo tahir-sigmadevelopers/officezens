@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import { Country, State } from "country-state-city";
+import { State } from "country-state-city";
 import { saveShippingInfo } from '../redux/actions/cartActions';
 
 const Shipping = () => {
@@ -12,10 +12,8 @@ const Shipping = () => {
     const dispatch = useDispatch();
 
     const [address, setaddress] = useState(shippingInfo?.address);
-    const [country, setcountry] = useState(shippingInfo?.country);
     const [state, setstate] = useState(shippingInfo?.state);
     const [city, setcity] = useState(shippingInfo?.city);
-    const [pinCode, setpinCode] = useState(shippingInfo?.pinCode);
     const [phoneNo, setphoneNo] = useState(shippingInfo?.phoneNo);
 
 
@@ -23,7 +21,7 @@ const Shipping = () => {
         e.preventDefault();
 
         dispatch(
-            saveShippingInfo({ address, country, state, city, pinCode, phoneNo })
+            saveShippingInfo({ address, state, city, phoneNo })
         );
 
 
@@ -64,16 +62,6 @@ const Shipping = () => {
                                     required />
                             </div>
                             <div>
-                                <input className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2 "
-                                    type="number"
-                                    placeholder="Pin Code"
-                                    name="pinCode"
-                                    value={pinCode}
-                                    onChange={(e) => setpinCode(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
                                 <input className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                                     type="number"
                                     placeholder="Phone Number"
@@ -84,44 +72,25 @@ const Shipping = () => {
                                     size={"11"}
                                 />
                             </div>
+
                             <div>
                                 <select
                                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-                                    value={country}
-                                    onChange={(e) => setcountry(e.target.value)}
+                                    value={state}
+                                    onChange={(e) => setstate(e.target.value)}
                                     required
                                 >
-                                    <option value="">Country</option>
-                                    {Country &&
-                                        Country.getAllCountries().map((i) => (
+                                    <option value="">State</option>
+                                    {State &&
+                                        State.getStatesOfCountry("PK").map((i) => (
                                             <option value={i.isoCode} key={i.isoCode}>
                                                 {i.name}
                                             </option>
                                         ))}
                                 </select>
-
                             </div>
-
-                            {
-                                country && <div>
-
-                                    <select
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-                                        value={state}
-                                        onChange={(e) => setstate(e.target.value)}
-                                        required
-                                    >
-                                        <option value="">State</option>
-                                        {State &&
-                                            State.getStatesOfCountry(country).map((i) => (
-                                                <option value={i.isoCode} key={i.isoCode}>
-                                                    {i.name}
-                                                </option>
-                                            ))}
-                                    </select>
-                                </div>
-                            }
-                            <button type="submit" className="w-full text-white bg-black hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Continue</button>
+                            
+                            <button type="submit" className="w-full text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Continue</button>
 
                         </form>
                     </div>

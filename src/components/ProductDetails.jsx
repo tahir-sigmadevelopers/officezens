@@ -252,7 +252,7 @@ const ProductDetails = () => {
                                     className="bg-black hover:bg-gray-900 text-white py-2 px-6 rounded-lg">
                                     Add To Cart
                                 </button>
-                                <Link to={"/cart"} className="bg-gray-300 hover:bg-gray-200 text-black py-2 px-6 rounded-lg">
+                                <Link to={"/cart"} className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-6 rounded-lg">
                                     Buy Now
                                 </Link>
                             </div>

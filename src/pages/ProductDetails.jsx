@@ -345,7 +345,7 @@ const ProductDetails = () => {
                                 <button
                                     disabled={product?.stock < 1}
                                     onClick={handleBuyNow}
-                                    className="bg-gray-800 hover:bg-black text-white py-3 px-6 rounded-lg font-semibold transition-all"
+                                    className="bg-yellow-400 hover:bg-yellow-500 text-white py-3 px-6 rounded-lg font-semibold transition-all"
                                 >
                                     Buy Now
                                 </button>

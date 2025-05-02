@@ -65,7 +65,7 @@ const OrderDetails = () => {
                             </p>
                             <p>
                                 <span className="font-medium">Address:</span> {order?.shippingInfo?.address}, {order?.shippingInfo?.city},
-                                {order?.shippingInfo?.country},  {order?.shippingInfo?.pinCode}
+                                {order?.shippingInfo?.state}
                             </p>
                         </div>
 
