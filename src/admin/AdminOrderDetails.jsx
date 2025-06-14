@@ -1,112 +1,294 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getOrderDetails, updateOrder } from "../redux/actions/orderAction";
-import { Skeleton } from "../components/Loader";
+import { Box, Button, Card, CardContent, Chip, Container, Divider, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import Sidebar from "./Sidebar";
 import toast from "react-hot-toast";
 
 const OrderDetails = () => {
+    const dispatch = useDispatch();
+    const { loading, order, error, message } = useSelector(state => state.orders);
+    const [updating, setUpdating] = useState(false);
 
-
-    const dispatch = useDispatch()
-    const { loading, order } = useSelector(state => state.orders)
-
-
-    const params = useParams()
-    const navigate = useNavigate()
+    const params = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(getOrderDetails(params.id))
-    }, [dispatch])
+        dispatch(getOrderDetails(params.id));
+    }, [dispatch, params.id]);
 
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+            dispatch({ type: "clearError" });
+        }
+        if (message) {
+            toast.success(message);
+            dispatch({ type: "clearMessage" });
+        }
+    }, [error, message, dispatch]);
 
     const handleProcessOrder = async () => {
-
+        setUpdating(true);
         try {
-
-            await dispatch(updateOrder(params.id))
-            toast.success("Order updated successfully")
-            navigate("/admin/orders")
-
+            await dispatch(updateOrder(params.id));
+            dispatch(getOrderDetails(params.id)); // Refresh order details
         } catch (error) {
-            toast.error(error?.message);
-            console.log(error);
-
+            toast.error(error?.message || "Failed to update order");
+        } finally {
+            setUpdating(false);
         }
+    };
+
+    // Helper function to get status color
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "Processing":
+                return "warning";
+            case "Shipped":
+                return "info";
+            case "Delivered":
+                return "success";
+            default:
+                return "default";
+        }
+    };
+
+    // Format date
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    // Get next status label
+    const getNextStatusLabel = (currentStatus) => {
+        switch (currentStatus) {
+            case "Processing":
+                return "Mark as Shipped";
+            case "Shipped":
+                return "Mark as Delivered";
+            case "Delivered":
+                return "Already Delivered";
+            default:
+                return "Update Status";
+        }
+    };
+
+    if (loading) {
+        return (
+            <Box sx={{ display: 'flex' }}>
+                <Sidebar />
+                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                    <Container>
+                        <Typography variant="h6">Loading order details...</Typography>
+                    </Container>
+                </Box>
+            </Box>
+        );
+    }
+
+    if (!order) {
+        return (
+            <Box sx={{ display: 'flex' }}>
+                <Sidebar />
+                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                    <Container>
+                        <Typography variant="h6">Order not found</Typography>
+                        <Button 
+                            variant="contained" 
+                            color="primary" 
+                            onClick={() => navigate('/admin/orders')}
+                            sx={{ mt: 2 }}
+                        >
+                            Back to Orders
+                        </Button>
+                    </Container>
+                </Box>
+            </Box>
+        );
     }
 
     return (
-        <div className="flex flex-col gap-8 p-8 my-16">
-            {loading ? <Skeleton length={6} /> : <>
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Order Items Section */}
-                    <div className="w-full lg:w-1/2 bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-center text-lg font-semibold mb-4">ORDER ITEMS</h2>
-                        <div className="flex items-center justify-between border-b pb-4">
-                            <img
-                                src="https://via.placeholder.com/50"
-                                alt="Product"
-                                className="w-12 h-12 rounded-md"
-                            />
-                            <p className="font-semibold">{order?.orderItems[0]?.name}</p>
-                            <p>{order?.orderItems[0]?.price} x {order?.orderItems[0]?.quantity} = {order?.itemsPrice}</p>
-                        </div>
-                    </div>
+        <Box sx={{ display: 'flex' }}>
+            <Sidebar />
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <Container>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Typography variant="h4">
+                            Order Details
+                        </Typography>
+                        <Button 
+                            variant="outlined" 
+                            onClick={() => navigate('/admin/orders')}
+                        >
+                            Back to Orders
+                        </Button>
+                    </Box>
 
-                    {/* Order Info Section */}
-                    <div className="w-full lg:w-1/2 bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-center text-lg font-semibold mb-4">ORDER INFO</h2>
+                    <Grid container spacing={3}>
+                        {/* Order Summary */}
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>Order Summary</Typography>
+                                    <Divider sx={{ mb: 2 }} />
+                                    
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Order ID</Typography>
+                                        <Typography variant="body1">{order._id}</Typography>
+                                    </Box>
+                                    
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Placed On</Typography>
+                                        <Typography variant="body1">{formatDate(order.createdAt)}</Typography>
+                                    </Box>
+                                    
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Status</Typography>
+                                        <Chip 
+                                            label={order.orderStatus} 
+                                            color={getStatusColor(order.orderStatus)} 
+                                            size="small" 
+                                            sx={{ mt: 0.5 }}
+                                        />
+                                    </Box>
+                                    
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Payment</Typography>
+                                        <Typography variant="body1">Cash on Delivery</Typography>
+                                    </Box>
 
-                        {/* User Info */}
-                        <div className="mb-6">
-                            <h3 className="font-bold mb-2">User Info</h3>
-                            <p>
-                                <span className="font-medium">Name:</span> {order?.user?.name}
-                            </p>
-                            <p>
-                                <span className="font-medium">Address:</span> {order?.shippingInfo?.address}, {order?.shippingInfo?.city},
-                                {order?.shippingInfo?.state}
-                            </p>
-                        </div>
+                                    <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        fullWidth
+                                        disabled={order.orderStatus === "Delivered" || updating}
+                                        onClick={handleProcessOrder}
+                                        sx={{ mt: 2 }}
+                                    >
+                                        {getNextStatusLabel(order.orderStatus)}
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
 
-                        {/* Amount Info */}
-                        <div className="mb-6">
-                            <h3 className="font-bold mb-2">Amount Info</h3>
-                            <p>
-                                <span className="font-medium">Subtotal:</span> {order?.itemsPrice}
-                            </p>
-                            <p>
-                                <span className="font-medium">Tax:</span> {order?.tax}
-                            </p>
-                            {/* <p>
-                                <span className="font-medium">Discount:</span> 0
-                            </p> */}
-                            <p className="font-semibold">
-                                <span className="font-medium">Total:</span> {order?.total}
-                            </p>
-                        </div>
+                        {/* Customer Info */}
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>Customer Information</Typography>
+                                    <Divider sx={{ mb: 2 }} />
+                                    
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Customer</Typography>
+                                        <Typography variant="body1">
+                                            {order.user ? order.user.name : 
+                                             order.guestInfo ? (order.guestInfo.email || "Guest") : "Guest"}
+                                        </Typography>
+                                    </Box>
+                                    
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Email</Typography>
+                                        <Typography variant="body1">
+                                            {order.user ? order.user.email : 
+                                             order.guestInfo ? order.guestInfo.email : "N/A"}
+                                        </Typography>
+                                    </Box>
+                                    
+                                    <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>Shipping Address</Typography>
+                                    <Divider sx={{ mb: 2 }} />
+                                    
+                                    <Typography variant="body1">
+                                        {order.shippingInfo.address},<br />
+                                        {order.shippingInfo.city}, {order.shippingInfo.state}<br />
+                                        Phone: {order.shippingInfo.phoneNo}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
 
-                        {/* Status Info */}
-                        <div>
-                            <h3 className="font-bold mb-2">Status Info</h3>
-                            <p>
-                                <span className="font-medium">Status:</span>{" "}
-                                <span className="text-green-500 font-semibold">{order?.orderStatus}</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                        {/* Payment Details */}
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>Payment Details</Typography>
+                                    <Divider sx={{ mb: 2 }} />
+                                    
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                        <Typography variant="body1">Subtotal:</Typography>
+                                        <Typography variant="body1">Rs. {order.itemsPrice?.toFixed(0) || 0}</Typography>
+                                    </Box>
+                                    
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                        <Typography variant="body1">Shipping:</Typography>
+                                        <Typography variant="body1">Rs. {order.shippingCharges?.toFixed(0) || 0}</Typography>
+                                    </Box>
+                                    
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                        <Typography variant="body1">Tax:</Typography>
+                                        <Typography variant="body1">Rs. {order.tax?.toFixed(0) || 0}</Typography>
+                                    </Box>
+                                    
+                                    <Divider sx={{ my: 1 }} />
+                                    
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="h6">Total:</Typography>
+                                        <Typography variant="h6" color="primary">Rs. {order.total?.toFixed(0) || 0}</Typography>
+                                    </Box>
+                                    
+                                    <Box sx={{ mt: 2 }}>
+                                        <Typography variant="body2" color="text.secondary">Payment Method</Typography>
+                                        <Typography variant="body1">Cash on Delivery</Typography>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
 
-                {/* Button Section */}
-                <div className="flex justify-center mt-4">
-                    <button onClick={handleProcessOrder} className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
-                        Process Status
-                    </button>
-                </div>
-            </>
-
-            }
-        </div>
+                        {/* Order Items */}
+                        <Grid item xs={12}>
+                            <TableContainer component={Paper}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Product</TableCell>
+                                            <TableCell>Name</TableCell>
+                                            <TableCell align="right">Price</TableCell>
+                                            <TableCell align="right">Quantity</TableCell>
+                                            <TableCell align="right">Total</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {order.orderItems.map((item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    <img 
+                                                        src={item.image} 
+                                                        alt={item.name} 
+                                                        style={{ width: '50px', height: '50px', objectFit: 'cover' }} 
+                                                    />
+                                                </TableCell>
+                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell align="right">Rs. {item.price.toFixed(0)}</TableCell>
+                                                <TableCell align="right">{item.quantity}</TableCell>
+                                                <TableCell align="right">Rs. {(item.price * item.quantity).toFixed(0)}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </Box>
+        </Box>
     );
 };
 

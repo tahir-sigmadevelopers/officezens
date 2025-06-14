@@ -58,6 +58,12 @@ const cartReducer = (state = initialState, action) => {
         shippingInfo: action.payload,
       };
 
+    case "clearCart":
+      return {
+        ...state,
+        cartItems: [],
+      };
+
     default:
       return state;
   }

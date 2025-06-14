@@ -21,6 +21,8 @@ export const orderReducer = createReducer(
       .addCase("adminOrderSuccess", (state, action) => {
         state.loading = false;
         state.orders = action.payload.orders;
+        state.ordersCount = action.payload.ordersCount;
+        state.totalAmount = action.payload.totalAmount;
       })
       .addCase("adminOrderFail", (state, action) => {
         state.loading = false;
@@ -45,6 +47,17 @@ export const orderReducer = createReducer(
         state.message = action.payload.message;
       })
       .addCase("updateOrderFail", (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase("deleteOrderRequest", (state) => {
+        state.loading = true;
+      })
+      .addCase("deleteOrderSuccess", (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+      })
+      .addCase("deleteOrderFail", (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

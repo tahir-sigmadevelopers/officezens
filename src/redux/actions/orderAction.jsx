@@ -9,6 +9,7 @@ export const createOrder = (orderData) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     };
     const { data } = await axios.post(`${server}/api/v1/order/new`, orderData, config);
 
@@ -34,8 +35,9 @@ export const getAdminOrders = () => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     };
-    const { data } = await axios.get(`${server}/order/all`, config);
+    const { data } = await axios.get(`${server}/api/v1/order/all`, config);
 
 
     dispatch({
@@ -58,8 +60,9 @@ export const getOrderDetails = (orderId) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     };
-    const { data } = await axios.get(`${server}/order/${orderId}`, config);
+    const { data } = await axios.get(`${server}/api/v1/order/${orderId}`, config);
 
     dispatch({
       type: "orderDetailsSuccess",
@@ -72,6 +75,7 @@ export const getOrderDetails = (orderId) => async (dispatch) => {
     });
   }
 };
+
 export const updateOrder = (orderId) => async (dispatch) => {
   try {
     dispatch({ type: "updateOrderRequest" });
@@ -80,8 +84,11 @@ export const updateOrder = (orderId) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     };
-    const { data } = await axios.put(`${server}/order/${orderId}`, config);
+    
+    // Send an empty object as the request body instead of sending the config as the body
+    const { data } = await axios.put(`${server}/api/v1/order/${orderId}`, {}, config);
 
     dispatch({
       type: "updateOrderSuccess",
@@ -91,6 +98,30 @@ export const updateOrder = (orderId) => async (dispatch) => {
     dispatch({
       type: "updateOrderFail",
       payload: error.response?.data.message || "Order Updating failed",
+    });
+  }
+};
+
+export const deleteOrder = (orderId) => async (dispatch) => {
+  try {
+    dispatch({ type: "deleteOrderRequest" });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+    const { data } = await axios.delete(`${server}/api/v1/order/${orderId}`, config);
+
+    dispatch({
+      type: "deleteOrderSuccess",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "deleteOrderFail",
+      payload: error.response?.data.message || "Order Deletion failed",
     });
   }
 };

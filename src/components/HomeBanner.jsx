@@ -38,7 +38,7 @@ export const HomeNavbar = () => {
             console.error("Error parsing user data from localStorage:", error);
             setUserData(null);
         }
-    }, [user, isAuthenticated, location.pathname]); // Re-check when location changes (navigation occurs)
+    }, [user, isAuthenticated, location.pathname, cartItems.length]); // Re-check when cart items change
 
     const isUserLoggedIn = Boolean(userData);
     const isAdmin = userData && userData.role === "admin";

@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Products from "./pages/Products";
 import Shipping from "./pages/Shipping";
 import ConfirmOrder from "./pages/ConfirmOrder";
-import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import JazzcashPayment from "./components/JazzcashPayment";
 import PaymentMethodSelection from "./pages/PaymentMethodSelection";
@@ -74,7 +73,6 @@ const AppContent = () => {
         <Route path="/confirmorder" element={<ConfirmOrder />} />
         <Route path="/success" element={<PaymentSuccess />} />
         <Route path="/payment-method" element={<PaymentMethodSelection />} />
-        <Route path="/payment/process" element={<Payment />} />
         <Route path="/jazzcash/payment" element={<JazzcashPayment />} />
 
         {/* Admin Routes wrapped in PrivateRoute */}
@@ -84,7 +82,7 @@ const AppContent = () => {
         <Route path="/admin/addproduct" element={<PrivateRoute element={<NewProduct />} />} />
         <Route path="/admin/addcategory" element={<PrivateRoute element={<NewCategory />} />} />
         <Route path="/admin/orders" element={<PrivateRoute element={<AdminOrders />} />} />
-        <Route path="/admin/order/manage/:id" element={<PrivateRoute element={<OrderDetails />} />} />
+        <Route path="/admin/order/:id" element={<PrivateRoute element={<OrderDetails />} />} />
         <Route path="/admin/product/:id" element={<PrivateRoute element={<UpdateProduct />} />} />
       </Routes>
 

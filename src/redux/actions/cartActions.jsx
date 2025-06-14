@@ -60,3 +60,8 @@ export const saveShippingInfo = (data) => async (dispatch) => {
 
   localStorage.setItem("shippingInfoEcommerce", JSON.stringify(data));
 };
+
+export const clearCart = () => (dispatch) => {
+  dispatch({ type: "clearCart" });
+  localStorage.removeItem("cartItems");
+};
