@@ -23,6 +23,9 @@ import PaymentMethodSelection from "./pages/PaymentMethodSelection";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ScrollToTop from "./components/ScrollToTop";
+import UserOrders from "./pages/UserOrders";
+import OrderDetails from "./pages/OrderDetails";
+import AdminOrderDetails from "./admin/AdminOrderDetails";
 
 // Admin Imports 
 import Dashboard from './admin/Dashboard';
@@ -32,7 +35,6 @@ import NewCategory from "./admin/AddCategory";
 import UpdateProduct from "./admin/UpdateProject";
 import { HomeNavbar } from "./components/HomeBanner";
 import AdminOrders from "./admin/AdminOrders";
-import OrderDetails from "./admin/AdminOrderDetails";
 import AdminCategory from "./admin/AdminCategory";
 
 // PrivateRoute component
@@ -74,6 +76,8 @@ const AppContent = () => {
         <Route path="/success" element={<PaymentSuccess />} />
         <Route path="/payment-method" element={<PaymentMethodSelection />} />
         <Route path="/jazzcash/payment" element={<JazzcashPayment />} />
+        <Route path="/orders" element={<PrivateRoute element={<UserOrders />} />} />
+        <Route path="/order/:id" element={<PrivateRoute element={<OrderDetails />} />} />
 
         {/* Admin Routes wrapped in PrivateRoute */}
         <Route path="/admin/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
@@ -82,7 +86,7 @@ const AppContent = () => {
         <Route path="/admin/addproduct" element={<PrivateRoute element={<NewProduct />} />} />
         <Route path="/admin/addcategory" element={<PrivateRoute element={<NewCategory />} />} />
         <Route path="/admin/orders" element={<PrivateRoute element={<AdminOrders />} />} />
-        <Route path="/admin/order/:id" element={<PrivateRoute element={<OrderDetails />} />} />
+        <Route path="/admin/order/:id" element={<PrivateRoute element={<AdminOrderDetails />} />} />
         <Route path="/admin/product/:id" element={<PrivateRoute element={<UpdateProduct />} />} />
       </Routes>
 

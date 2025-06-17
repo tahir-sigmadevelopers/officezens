@@ -25,7 +25,31 @@ export const createOrder = (orderData) => async (dispatch) => {
   }
 };
 
+export const getMyOrders = (guestEmail) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "myOrdersRequest",
+    });
 
+    const url = guestEmail
+      ? `${server}/api/v1/order/my?email=${encodeURIComponent(guestEmail)}`
+      : `${server}/api/v1/order/my`;
+
+    const { data } = await axios.get(url, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "myOrdersSuccess",
+      payload: data.orders,
+    });
+  } catch (error) {
+    dispatch({
+      type: "myOrdersFail",
+      payload: error.response?.data?.message || "Failed to fetch orders",
+    });
+  }
+};
 
 export const getAdminOrders = () => async (dispatch) => {
   try {
@@ -52,9 +76,13 @@ export const getAdminOrders = () => async (dispatch) => {
   }
 };
 
-export const getOrderDetails = (orderId) => async (dispatch) => {
+export const getOrderDetails = (id, email) => async (dispatch) => {
   try {
     dispatch({ type: "orderDetailsRequest" });
+
+    const url = email
+      ? `${server}/api/v1/order/${id}?email=${encodeURIComponent(email)}`
+      : `${server}/api/v1/order/${id}`;
 
     const config = {
       headers: {
@@ -62,7 +90,7 @@ export const getOrderDetails = (orderId) => async (dispatch) => {
       },
       withCredentials: true,
     };
-    const { data } = await axios.get(`${server}/api/v1/order/${orderId}`, config);
+    const { data } = await axios.get(url, config);
 
     dispatch({
       type: "orderDetailsSuccess",

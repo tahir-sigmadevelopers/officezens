@@ -6,7 +6,7 @@ import productsReducer from './reducers/products';
 import cartReducer from './reducers/cart';
 import productDetailsReducer from './reducers/product-details';
 import { productsApi } from './productsApi';
-import { orderReducer } from './reducers/ordersReducer';
+import { orderReducer, myOrdersReducer } from './reducers/ordersReducer';
 
 
 const store = configureStore({
@@ -16,6 +16,7 @@ const store = configureStore({
     products: productsReducer,
     productDetails: productDetailsReducer,
     orders: orderReducer,
+    myOrders: myOrdersReducer,
     [productsApi.reducerPath]: productsApi.reducer,
 
   },

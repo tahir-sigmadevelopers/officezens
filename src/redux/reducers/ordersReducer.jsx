@@ -33,7 +33,7 @@ export const orderReducer = createReducer(
       })
       .addCase("orderDetailsSuccess", (state, action) => {
         state.loading = false;
-        state.order = action.payload.order;
+        state.order = action.payload;
       })
       .addCase("orderDetailsFail", (state, action) => {
         state.loading = false;
@@ -74,14 +74,14 @@ export const myOrdersReducer = createReducer(
   { orders: [], loading: false, message: null, error: null },
   (builder) => {
     builder
-      .addCase("getMyOrdersRequest", (state) => {
+      .addCase("myOrdersRequest", (state) => {
         state.loading = true;
       })
-      .addCase("getMyOrdersSuccess", (state, action) => {
+      .addCase("myOrdersSuccess", (state, action) => {
         state.loading = false;
-        state.orders = action.payload.orders;
+        state.orders = action.payload;
       })
-      .addCase("getMyOrdersFail", (state, action) => {
+      .addCase("myOrdersFail", (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

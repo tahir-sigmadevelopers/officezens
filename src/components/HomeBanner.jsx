@@ -100,7 +100,10 @@ export const HomeNavbar = () => {
                     {!isUserLoggedIn ? (
                         <Link to="/login" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>Log In</Link>
                     ) : (
-                        <button onClick={() => {logoutHandler(); setIsMenuOpen(false);}} className="text-white hover:text-gray-300 text-left">Log Out</button>
+                        <>
+                            <Link to="/orders" className="text-white hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>My Orders</Link>
+                            <button onClick={() => {logoutHandler(); setIsMenuOpen(false);}} className="text-white hover:text-gray-300 text-left">Log Out</button>
+                        </>
                     )}
                     
                     {isAdmin && (
@@ -150,7 +153,10 @@ export const HomeNavbar = () => {
                     {!isUserLoggedIn ? (
                         <Link to="/login" className="text-white hover:text-gray-300 w-28 py-2">Log In</Link>
                     ) : (
-                        <button onClick={logoutHandler} className="text-white hover:text-gray-300 w-28 py-2">Log Out</button>
+                        <>
+                            <Link to="/orders" className="text-white hover:text-gray-300">My Orders</Link>
+                            <button onClick={logoutHandler} className="text-white hover:text-gray-300 w-28 py-2">Log Out</button>
+                        </>
                     )}
                     
                     {isAdmin && (
