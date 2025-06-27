@@ -19,6 +19,12 @@ const OrderDetails = () => {
     }, [dispatch, params.id]);
 
     useEffect(() => {
+        if (order) {
+            console.log("Order data:", order);
+        }
+    }, [order]);
+
+    useEffect(() => {
         if (error) {
             toast.error(error);
             dispatch({ type: "clearError" });
@@ -207,9 +213,9 @@ const OrderDetails = () => {
                                     <Divider sx={{ mb: 2 }} />
                                     
                                     <Typography variant="body1">
-                                        {order.shippingInfo.address},<br />
-                                        {order.shippingInfo.city}, {order.shippingInfo.state}<br />
-                                        Phone: {order.shippingInfo.phoneNo}
+                                        {order?.shippingInfo?.address},<br />
+                                        {order?.shippingInfo?.city}, {order?.shippingInfo?.state}<br />
+                                        Phone: {order?.shippingInfo?.phoneNo}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -266,19 +272,19 @@ const OrderDetails = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {order.orderItems.map((item) => (
+                                        {order?.orderItems?.map((item) => (
                                             <TableRow key={item.id}>
                                                 <TableCell>
                                                     <img 
-                                                        src={item.image} 
-                                                        alt={item.name} 
+                                                        src={item?.image} 
+                                                        alt={item?.name} 
                                                         style={{ width: '50px', height: '50px', objectFit: 'cover' }} 
                                                     />
                                                 </TableCell>
                                                 <TableCell>{item.name}</TableCell>
-                                                <TableCell align="right">Rs. {item.price.toFixed(0)}</TableCell>
-                                                <TableCell align="right">{item.quantity}</TableCell>
-                                                <TableCell align="right">Rs. {(item.price * item.quantity).toFixed(0)}</TableCell>
+                                                <TableCell align="right">Rs. {item?.price?.toFixed(0)}</TableCell>
+                                                <TableCell align="right">{item?.quantity}</TableCell>
+                                                <TableCell align="right">Rs. {(item?.price * item?.quantity)?.toFixed(0)}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

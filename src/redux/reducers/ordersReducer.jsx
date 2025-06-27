@@ -33,7 +33,7 @@ export const orderReducer = createReducer(
       })
       .addCase("orderDetailsSuccess", (state, action) => {
         state.loading = false;
-        state.order = action.payload;
+        state.order = action.payload.order;
       })
       .addCase("orderDetailsFail", (state, action) => {
         state.loading = false;
