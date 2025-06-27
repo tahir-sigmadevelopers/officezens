@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { State } from "country-state-city";
 import { saveShippingInfo } from '../redux/actions/cartActions';
+import toast from 'react-hot-toast';
 
 const Shipping = () => {
-
-    const { shippingInfo } = useSelector((state) => state.cart);
-
+    const { shippingInfo, cartItems } = useSelector((state) => state.cart);
+    const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -15,17 +15,42 @@ const Shipping = () => {
     const [state, setstate] = useState(shippingInfo?.state);
     const [city, setcity] = useState(shippingInfo?.city);
     const [phoneNo, setphoneNo] = useState(shippingInfo?.phoneNo);
+    
+    // Check if this is a direct buy or regular cart checkout
+    const isBuyNow = new URLSearchParams(location.search).get('buyNow') === 'true';
+    const buyNowItems = localStorage.getItem("buyNowItem") ? JSON.parse(localStorage.getItem("buyNowItem")) : null;
 
+    // Check if cart is empty, redirect to products if it is
+    useEffect(() => {
+        // If it's a direct buy, check for buyNowItem in localStorage
+        if (isBuyNow) {
+            if (!buyNowItems || buyNowItems.length === 0) {
+                toast.error("Product information not found");
+                navigate("/products");
+            }
+        } else {
+            // Regular cart flow
+            if (!cartItems || cartItems.length === 0) {
+                toast.error("Your cart is empty");
+                navigate("/products");
+            }
+        }
+    }, [cartItems, navigate, isBuyNow, buyNowItems]);
 
     const shippingSubmitHandler = async (e) => {
         e.preventDefault();
 
+        // Save shipping info to Redux and localStorage
         dispatch(
             saveShippingInfo({ address, state, city, phoneNo })
         );
 
-
-        navigate("/confirmorder");
+        // Navigate to confirm order with query param if it's a direct buy
+        if (isBuyNow) {
+            navigate("/confirmorder?buyNow=true");
+        } else {
+            navigate("/confirmorder");
+        }
     };
 
     useEffect(() => {

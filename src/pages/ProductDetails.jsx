@@ -59,9 +59,42 @@ const ProductDetails = () => {
     };
 
     // New function to handle Buy Now button click
-    const handleBuyNow = () => {
-        dispatch(addToCart(id, quantity, selectedVariation));
-        navigate('/shipping');
+    const handleBuyNow = async () => {
+        try {
+            // Make sure product data is available
+            if (!product) {
+                toast.error("Product data not available");
+                return;
+            }
+            
+            // Create a direct buy item
+            const buyNowItem = {
+                id: product.product._id,
+                name: product.product.name,
+                stock: product.product.stock,
+                price: selectedVariation?.price || product.product.price,
+                image: selectedVariation?.image?.url || product.product.images[0].url,
+                quantity,
+                variation: selectedVariation ? {
+                    name: selectedVariation.name,
+                    color: selectedVariation.color || null,
+                    image: selectedVariation.image || null
+                } : null
+            };
+            
+            // Store the single item in localStorage for direct checkout
+            const buyNowItems = [buyNowItem];
+            localStorage.setItem("buyNowItem", JSON.stringify(buyNowItems));
+            
+            // Show success message
+            toast.success("Proceeding to checkout");
+            
+            // Navigate directly to shipping page
+            navigate('/shipping?buyNow=true');
+        } catch (error) {
+            toast.error("Failed to process order");
+            console.error("Buy Now Error:", error);
+        }
     };
 
     const handleVariationClick = (variation) => {
