@@ -10,8 +10,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
-import axios from "axios";
-import { server } from "./redux/constants";
 import { userExist, userNotExist, syncWithStorage, getUser } from "./redux/reducers/auth";
 import { useDispatch, useSelector } from "react-redux";
 import Products from "./pages/Products";

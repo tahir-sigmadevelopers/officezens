@@ -1,33 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const OrderSummary = () => {
+
     const navigate = useNavigate();
-    const location = useLocation();
+
     const { user } = useSelector((state) => state.auth);
     const { shippingInfo, cartItems } = useSelector((state) => state.cart);
-    
-    // Check if this is a direct buy or regular cart checkout
-    const isBuyNow = new URLSearchParams(location.search).get('buyNow') === 'true';
-    const [items, setItems] = useState([]);
-    
-    useEffect(() => {
-        // Determine which items to use for the order
-        if (isBuyNow) {
-            const buyNowItems = localStorage.getItem("buyNowItem") ? 
-                JSON.parse(localStorage.getItem("buyNowItem")) : [];
-            
-            if (buyNowItems.length === 0) {
-                navigate("/products");
-                return;
-            }
-            
-            setItems(buyNowItems);
-        } else {
-            setItems(cartItems);
-        }
-    }, [isBuyNow, cartItems, navigate]);
 
     // Ensure shippingInfo is available
     if (!shippingInfo || !shippingInfo.address) {
@@ -38,7 +18,7 @@ const OrderSummary = () => {
     // Format full address for better display
     const address = `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state}`;
 
-    const subtotal = items.reduce((accumulator, currentItem) => {
+    const subtotal = cartItems.reduce((accumulator, currentItem) => {
         const itemPrice = currentItem.price * currentItem.quantity;
         return accumulator + itemPrice;
     }, 0);
@@ -59,21 +39,13 @@ const OrderSummary = () => {
             shippingCharges,
             tax,
             totalPrice,
-            isBuyNow,
-            items
         };
         sessionStorage.setItem("confirmOrder", JSON.stringify(data));
-        
-        // Pass the buyNow parameter to maintain the flow
-        if (isBuyNow) {
-            navigate("/payment-method?buyNow=true");
-        } else {
-            navigate("/payment-method");
-        }
+        navigate("/payment-method")
     };
 
     return (
-        <div className="flex flex-col md:flex-row md:space-x-4 p-4 py-12 sm:p-6 md:p-10 mt-12 sm:mt-16 md:mt-0 md:py-24">
+        <div className="flex flex-col md:flex-row md:space-x-4 p-4 py-8 sm:p-6 md:p-10 mt-12 sm:mt-16 md:mt-0 md:py-16">
             {/* Left Side: Shipping Info and Cart Items */}
             <div className="w-full md:w-2/3 px-3 md:px-6 space-y-6 md:space-y-8 mb-6 md:mb-0">
                 {/* Shipping Info */}
@@ -102,8 +74,8 @@ const OrderSummary = () => {
                     <h2 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Your Cart Items</h2>
                     <div className="space-y-4">
                         {
-                            items &&
-                            items.map((item) => (
+                            cartItems &&
+                            cartItems.map((item) => (
                                 <div className="flex flex-col sm:flex-row sm:items-start border-b pb-4 last:border-0" key={item.id}>
                                     <div className="flex items-start mb-3 sm:mb-0 sm:w-2/3">
                                         <div className="relative">
